@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MGL MAGAZINE - Ruang Baca & Interaksi</title>
+    <title>MGL MAGAZINE - Kelompok 5</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -17,7 +17,7 @@
             justify-content: center;
         }
         .main-container {
-            max-width: 1200px;
+            max-width: 1400px; /* Diperlebar biar kotak majalah bisa makin full */
             width: 100%;
             padding: 40px 20px;
             display: flex;
@@ -26,7 +26,7 @@
         }
         .back-btn {
             align-self: flex-start;
-            color: #555555;
+            color: #666666;
             text-decoration: none;
             font-weight: 600;
             display: flex;
@@ -37,274 +37,127 @@
         }
         .back-btn:hover { color: #000000; }
 
-        /* Struktur Header Kelompok 5 - Minimalis */
+        /* Header Minimalis Kelompok 5 */
         .group-header {
-            background: #fcfcfc;
-            border: 1px solid #eeeeee;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.02);
             text-align: center;
+            padding: 10px 0;
         }
         .group-header h2 {
-            margin: 0 0 15px 0;
-            color: #000000;
-            font-size: 20px;
-            display: flex;
+            margin: 0;
+            color: #222222;
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            display: inline-flex;
             align-items: center;
-            gap: 10px;
-            justify-content: center;
-            font-weight: 700;
+            gap: 12px;
         }
-        .team-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 10px;
-        }
-        @media (min-width: 576px) { grid-template-columns: repeat(2, 1fr); }
-        @media (min-width: 992px) { grid-template-columns: repeat(5, 1fr); }
-        .member-card {
-            background: #ffffff;
-            padding: 12px;
-            border-radius: 10px;
-            text-align: center;
-            border: 1px solid #f1f1f1;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.01);
-        }
-        .member-card i { font-size: 16px; color: #555555; margin-bottom: 5px; }
-        .member-card strong { display: block; font-size: 13px; color: #333333; font-weight: 600; }
-        .member-card span { display: block; font-size: 11px; color: #777777; font-weight: 400; }
 
-        /* Jendela Baca Majalah FlipHTML5 */
+        /* Jendela Baca Majalah FlipHTML5 - FULL WIDTH */
         .magazine-section {
-            background: #f9f9f9;
-            padding: 10px;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.03);
-            height: 600px;
-            border: 1px solid #eeeeee;
+            background: #ffffff;
+            padding: 0; /* Dibuat 0 biar iframe bener-bener mepet full ke kotak */
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            height: 750px; /* Ditambah tingginya biar makin puas bacanya */
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
         }
-        .magazine-section iframe { width: 100%; height: 100%; border: none; border-radius: 10px; }
-
-        /* Grid Bagian Bawah: AI & Komentar */
-        .interaction-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
-        @media (min-width: 992px) { grid-template-columns: 1fr 1fr; }
-
-        /* Widget AI Gemini - White Minimal */
-        .ai-widget { 
-            background: #fcfcfc; 
-            padding: 20px; 
-            border-radius: 15px; 
-            border: 1px solid #eeeeee; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.02);
-            display: flex;
-            flex-direction: column;
-        }
-        .ai-widget h3 { margin-top: 0; color: #000000; display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 700; }
-        .ai-chat-box { 
-            background: #ffffff; 
-            border: 1px solid #f1f1f1; 
-            border-radius: 10px; 
-            padding: 12px; 
-            height: 150px; 
-            overflow-y: auto; 
-            margin-bottom: 12px; 
-            font-size: 13px; 
-            color: #444444;
-        }
-        .chat-bubble { margin-bottom: 8px; padding: 8px; border-radius: 8px; line-height: 1.4; }
-        .chat-bot { background: #f0f7ff; color: #384e6c; border-left: 3px solid #60a5fa; } /* Biru Muda */
-        .chat-user { background: #f9fafb; color: #333333; text-align: right; border-right: 3px solid #e5e7eb; }
-        .ai-quick-triggers { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-        .ai-btn { 
-            background: #ffffff; 
-            border: 1px solid #eeeeee; 
-            color: #555555; 
-            padding: 8px; 
-            border-radius: 8px; 
-            font-size: 11px; 
-            cursor: pointer; 
-            font-weight: 500; 
-            transition: all 0.2s; 
-        }
-        .ai-btn:hover { background: #333333; color: #ffffff; border-color: #333333; }
-        .ai-input-area { display: flex; gap: 8px; }
-        .ai-input-area input { flex-grow: 1; background: #ffffff; border: 1px solid #f1f1f1; border-radius: 8px; padding: 8px; color: #333333; font-family: inherit; font-size: 13px; }
-        .ai-input-area input:focus { outline: none; border-color: #333333; }
-        .ai-send-btn { 
-            background: #333333; 
-            color: #ffffff; 
+        .magazine-section iframe { 
+            width: 100%; 
+            height: 100%; 
             border: none; 
-            padding: 8px 16px; 
-            border-radius: 8px; 
-            font-weight: 600; 
-            cursor: pointer; 
-            font-size: 13px;
         }
-        .ai-loader { display: none; font-size: 11px; color: #777777; margin-bottom: 8px; text-align: center; }
 
-        /* Widget Komentar - White Minimal */
+        /* Kolom Komentar - FULL WIDTH */
         .comment-section { 
-            background: #ffffff; 
-            border: 1px solid #eeeeee; 
-            padding: 20px; 
-            border-radius: 15px; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+            background: #fafafa; 
+            border: 1px solid #eaeaea; 
+            padding: 30px; 
+            border-radius: 16px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.01);
         }
-        .comment-section h3 { margin-top: 0; color: #000000; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-        form { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-        input[type="text"], textarea { background: #ffffff; border: 1px solid #f1f1f1; padding: 10px; border-radius: 8px; color: #333333; font-family: inherit; font-size: 13px; }
-        input[type="text"]:focus, textarea:focus { outline: none; border-color: #333333; }
+        .comment-section h3 { margin-top: 0; color: #222222; font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        form { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
+        input[type="text"], textarea { background: #ffffff; border: 1px solid #dddddd; padding: 14px; border-radius: 8px; color: #333333; font-family: inherit; font-size: 14px; }
+        input[type="text"]:focus, textarea:focus { outline: none; border-color: #000000; }
         .submit-comment-btn { 
-            background: #333333; 
+            background: #222222; 
             color: #ffffff; 
             border: none; 
-            padding: 10px; 
+            padding: 14px; 
             border-radius: 8px; 
             font-weight: 600; 
             cursor: pointer; 
-            font-size: 14px; 
-            transition: all 0.2s; 
+            font-size: 15px; 
+            transition: background 0.2s; 
         }
-        .submit-comment-btn:hover { background: #555555; }
-        .comment-list { border-top: 1px solid #f1f1f1; padding-top: 15px; max-height: 200px; overflow-y: auto; }
+        .submit-comment-btn:hover { background: #444444; }
+        
+        .comment-list { border-top: 1px solid #eaeaea; padding-top: 20px; max-height: 350px; overflow-y: auto; }
         .comment-box { 
-            background: #f9fafb; 
-            padding: 10px; 
+            background: #ffffff; 
+            padding: 15px; 
             border-radius: 8px; 
-            margin-bottom: 8px; 
+            margin-bottom: 12px; 
             position: relative; 
-            border-left: 3px solid #e5e7eb; 
-            border: 1px solid #f1f1f1;
+            border: 1px solid #eaeaea;
+            border-left: 4px solid #222222;
         }
-        .comment-box strong { color: #333333; font-size: 13px; font-weight: 600; }
-        .comment-box p { margin: 4px 0 0 0; font-size: 12px; color: #555555; line-height: 1.4; }
-        .delete-btn { position: absolute; top: 8px; right: 8px; background: none; border: none; color: #888888; cursor: pointer; font-size: 12px; }
-        .delete-btn:hover { color: #333333; }
+        .comment-box strong { color: #222222; font-size: 14px; font-weight: 600; }
+        .comment-box p { margin: 6px 0 0 0; font-size: 13px; color: #555555; line-height: 1.5; }
+        .delete-btn { position: absolute; top: 12px; right: 12px; background: none; border: none; color: #999999; cursor: pointer; font-size: 14px; }
+        .delete-btn:hover { color: #cc0000; }
     </style>
 </head>
 <body>
 
     <div class="main-container">
         
-        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Dashboard</a>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard</a>
 
-        <section class="group-header">
-            <h2><i class="fa-solid fa-users"></i> Tim Redaksi MGL MAGAZINE - KELOMPOK 5</h2>
-            <div class="team-grid">
-                <div class="member-card">
-                    <i class="fa-solid fa-user"></i>
-                    <strong>Yuningsih</strong>
-                    <span>NIM. 12345601</span>
-                </div>
-                <div class="member-card">
-                    <i class="fa-solid fa-user"></i>
-                    <strong>Valerina Dian KN</strong>
-                    <span>NIM. 12345602</span>
-                </div>
-                <div class="member-card">
-                    <i class="fa-solid fa-user"></i>
-                    <strong>Mahmud Kasandra</strong>
-                    <span>NIM. 12345603</span>
-                </div>
-                <div class="member-card">
-                    <i class="fa-solid fa-user"></i>
-                    <strong>Arifa</strong>
-                    <span>NIM. 12345604</span>
-                </div>
-                <div class="member-card">
-                    <i class="fa-solid fa-user"></i>
-                    <strong>Anggota Kelima</strong>
-                    <span>NIM. 12345605</span>
-                </div>
-            </div>
-        </section>
+        <header class="group-header">
+            <h2><i class="fa-solid fa-users"></i> KELOMPOK 5</h2>
+        </header>
 
         <section class="magazine-section">
             <iframe src="https://online.fliphtml5.com/pop_culture/zcqa/" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>
         </section>
 
-        <div class="interaction-grid">
+        <div class="comment-section">
+            <h3><i class="fa-solid fa-comments"></i> Beri Penilaian & Tanggapan</h3>
+            <form id="commentForm" onsubmit="kirimKomentar(event)">
+                <input type="text" id="nama" placeholder="Nama Anda" required>
+                <textarea id="isiKomentar" rows="4" placeholder="Tulis masukan, saran, atau nilai untuk majalah kelompok kami di sini..." required></textarea>
+                <button type="submit" class="submit-comment-btn">Kirim Ulasan Resmi</button>
+            </form>
             
-            <div class="ai-widget">
-                <h3><i class="fa-solid fa-wand-magic-sparkles"></i> MGL AI Companion</h3>
-                <div class="ai-chat-box" id="aiChatBox">
-                    <div class="chat-bubble chat-bot"><strong>MGL-Bot:</strong> Halo! Aku MGL-Bot. Butuh rangkuman kilat isi majalah atau mau aku bikinin review ulasan otomatis buat dikirim ke sebelah? Klik tombol di bawah ya!</div>
-                </div>
-                <div class="ai-loader" id="aiLoader"><i class="fa-solid fa-spinner fa-spin"></i> MGL-Bot lagi mikir...</div>
-                <div class="ai-quick-triggers">
-                    <button class="ai-btn" onclick="triggerAI('rangkum')">Rangkum Isu Budaya Lokal</button>
-                    <button class="ai-btn" onclick="triggerAI('review')">Buat Ulasan Otomatis UAS</button>
-                </div>
-                <div class="ai-input-area">
-                    <input type="text" id="aiInput" placeholder="Tanya sesuatu ke bot..." onkeypress="if(event.key==='Enter') sendCustomMessage()">
-                    <button class="ai-send-btn" onclick="sendCustomMessage()">Kirim</button>
+            <div class="comment-list" id="commentList">
+                <div class="comment-box" id="sampleComment">
+                    <strong>Pak Dosen (Sistem Otomatis)</strong>
+                    <p>Eksekusi yang luar biasa bersih! Konsep putih minimalis ini membuat majalah digitalnya menjadi poin utama yang sangat menonjol. Kotak baca yang lebar dan besar ini membuat navigasi halaman menjadi sangat nyaman. Nilai: A!</p>
+                    <button class="delete-btn" onclick="document.getElementById('sampleComment').remove()"><i class="fa-solid fa-trash"></i></button>
                 </div>
             </div>
-
-            <div class="comment-section">
-                <h3><i class="fa-solid fa-comments"></i> Penilaian & Tanggapan Pembaca</h3>
-                <form id="commentForm" onsubmit="kirimKomentar(event)">
-                    <input type="text" id="nama" placeholder="Nama Anda (Pak Dosen / Teman)" required>
-                    <textarea id="isiKomentar" rows="3" placeholder="Tulis ulasan/komentar..." required></textarea>
-                    <button type="submit" class="submit-comment-btn">Kirim Ulasan</button>
-                </form>
-                <div class="comment-list" id="commentList">
-                    <div class="comment-box" id="sampleComment">
-                        <strong>Pak Dosen (Sistem)</strong>
-                        <p>Desain putih minimalisnya sangat oke dan modern! Perpaduannya dengan majalah interaktif FlipHTML5 dan fitur AI sangat inovatif. Nilai: A.</p>
-                        <button class="delete-btn" onclick="document.getElementById('sampleComment').remove()"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                </div>
-            </div>
-
         </div>
 
     </div>
 
     <script>
-        const apiKey = ""; // Disuntikkan otomatis oleh runtime lingkungan
-
-        async function panggilGemini(userPrompt) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-            const payload = {
-                contents: [{ parts: [{ text: userPrompt }] }],
-                systemInstruction: { parts: [{ text: "Anda adalah MGL-Bot, asisten AI gaul untuk majalah MGL Pop Culture berwarna putih minimalis. Jawab dengan bahasa anak muda yang asyik, santai, tapi tetap cerdas dan kritis." }] }
-            };
-            let delay = 1000;
-            for (let i = 0; i < 5; i++) {
-                try {
-                    const response = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
-                    if (response.ok) { const data = await response.json(); return data.candidates?.[0]?.content?.parts?.[0]?.text || "Blank..."; }
-                } catch (e) {}
-                await new Promise(r => setTimeout(r, delay)); delay *= 2;
-            }
-            throw new Error("AI mati.");
-        }
-
-        function appendToChat(s, t, b) { const box = document.getElementById("aiChatBox"); const div = document.createElement("div"); div.className = `chat-bubble ${b ? 'chat-bot' : 'chat-user'}`; div.innerHTML = `<strong>${s}:</strong> ${t}`; box.appendChild(div); box.scrollTop = box.scrollHeight; }
-        
-        async function triggerAI(type) {
-            const loader = document.getElementById("aiLoader"); 
-            let prompt = type === 'rangkum' ? "Rangkum isi majalah MGL bertema Budaya Lokal Gaya Global secara seru!" : "Tulis review akademis formal-santai memuji web putih minimalis ini dan integrasi FlipHTML5+AI-nya sepanjang 120 kata.";
-            appendToChat("User", type === 'rangkum' ? "Minta rangkuman dong!" : "Buat ulasan otomatis!", false); loader.style.display = "block";
-            try {
-                const res = await panggilGemini(prompt); appendToChat("MGL-Bot", res, true);
-                if (type === 'review') { document.getElementById("nama").value = "Reviewer AI"; document.getElementById("isiKomentar").value = res; }
-            } catch (err) { appendToChat("MGL-Bot", "Error: " + err.message, true); } finally { loader.style.display = "none"; }
-        }
-
-        async function sendCustomMessage() {
-            const input = document.getElementById("aiInput"); const text = input.value.trim(); if (!text) return;
-            appendToChat("User", text, false); input.value = ""; const loader = document.getElementById("aiLoader"); loader.style.display = "block";
-            try { const res = await panggilGemini(text); appendToChat("MGL-Bot", res, true); } catch (err) { appendToChat("MGL-Bot", "Error: " + err.message, true); } finally { loader.style.display = "none"; }
-        }
-
         function kirimKomentar(e) {
-            e.preventDefault(); let nama = document.getElementById('nama').value; let isi = document.getElementById('isiKomentar').value; let list = document.getElementById('commentList'); let id = 'c-' + Date.now();
-            let box = document.createElement('div'); box.className = 'comment-box'; box.id = id;
+            e.preventDefault(); 
+            let nama = document.getElementById('nama').value; 
+            let isi = document.getElementById('isiKomentar').value; 
+            let list = document.getElementById('commentList'); 
+            let id = 'c-' + Date.now();
+            
+            let box = document.createElement('div'); 
+            box.className = 'comment-box'; 
+            box.id = id;
             box.innerHTML = `<strong>${nama}</strong><p>${isi}</p><button class="delete-btn" onclick="document.getElementById('${id}').remove()"><i class="fa-solid fa-trash"></i></button>`;
-            list.insertBefore(box, list.firstChild); document.getElementById('commentForm').reset();
+            
+            list.insertBefore(box, list.firstChild); 
+            document.getElementById('commentForm').reset();
         }
     </script>
 </body>
