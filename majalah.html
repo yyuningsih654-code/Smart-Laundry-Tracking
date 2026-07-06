@@ -11,13 +11,13 @@
             font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
-            background: #ffffff; /* Putih Bersih */
-            color: #333333; /* Abu-abu Tua */
+            background: #ffffff;
+            color: #333333;
             display: flex;
             justify-content: center;
         }
         .main-container {
-            max-width: 1400px; /* Diperlebar biar kotak majalah bisa makin full */
+            max-width: 1400px;
             width: 100%;
             padding: 40px 20px;
             display: flex;
@@ -37,39 +37,20 @@
         }
         .back-btn:hover { color: #000000; }
 
-        /* Header Minimalis Kelompok 5 */
-        .group-header {
-            text-align: center;
-            padding: 10px 0;
-        }
-        .group-header h2 {
-            margin: 0;
-            color: #222222;
-            font-size: 32px;
-            font-weight: 800;
-            letter-spacing: 1px;
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-        }
+        .group-header { text-align: center; padding: 10px 0; }
+        .group-header h2 { margin: 0; color: #222222; font-size: 32px; font-weight: 800; letter-spacing: 1px; display: inline-flex; align-items: center; gap: 12px; }
 
-        /* Jendela Baca Majalah FlipHTML5 - FULL WIDTH */
         .magazine-section {
             background: #ffffff;
-            padding: 0; /* Dibuat 0 biar iframe bener-bener mepet full ke kotak */
+            padding: 0;
             border-radius: 16px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.06);
-            height: 750px; /* Ditambah tingginya biar makin puas bacanya */
+            height: 750px;
             border: 1px solid #e5e7eb;
             overflow: hidden;
         }
-        .magazine-section iframe { 
-            width: 100%; 
-            height: 100%; 
-            border: none; 
-        }
+        .magazine-section iframe { width: 100%; height: 100%; border: none; }
 
-        /* Kolom Komentar - FULL WIDTH */
         .comment-section { 
             background: #fafafa; 
             border: 1px solid #eaeaea; 
@@ -81,39 +62,25 @@
         form { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
         input[type="text"], textarea { background: #ffffff; border: 1px solid #dddddd; padding: 14px; border-radius: 8px; color: #333333; font-family: inherit; font-size: 14px; }
         input[type="text"]:focus, textarea:focus { outline: none; border-color: #000000; }
-        .submit-comment-btn { 
-            background: #222222; 
-            color: #ffffff; 
-            border: none; 
-            padding: 14px; 
-            border-radius: 8px; 
-            font-weight: 600; 
-            cursor: pointer; 
-            font-size: 15px; 
-            transition: background 0.2s; 
-        }
+        .submit-comment-btn { background: #222222; color: #ffffff; border: none; padding: 14px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 15px; transition: background 0.2s; }
         .submit-comment-btn:hover { background: #444444; }
         
-        .comment-list { border-top: 1px solid #eaeaea; padding-top: 20px; max-height: 350px; overflow-y: auto; }
+        .comment-list { border-top: 1px solid #eaeaea; padding-top: 20px; max-height: 450px; overflow-y: auto; }
         .comment-box { 
             background: #ffffff; 
             padding: 15px; 
             border-radius: 8px; 
             margin-bottom: 12px; 
-            position: relative; 
             border: 1px solid #eaeaea;
             border-left: 4px solid #222222;
         }
         .comment-box strong { color: #222222; font-size: 14px; font-weight: 600; }
         .comment-box p { margin: 6px 0 0 0; font-size: 13px; color: #555555; line-height: 1.5; }
-        .delete-btn { position: absolute; top: 12px; right: 12px; background: none; border: none; color: #999999; cursor: pointer; font-size: 14px; }
-        .delete-btn:hover { color: #cc0000; }
     </style>
 </head>
 <body>
 
     <div class="main-container">
-        
         <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard</a>
 
         <header class="group-header">
@@ -121,44 +88,81 @@
         </header>
 
         <section class="magazine-section">
-            <iframe src="https://online.fliphtml5.com/pop_culture/zcqa/" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>
+            <iframe src="https://online.fliphtml5.com/pop_culture/zcqa/" allowfullscreen="true"></iframe>
         </section>
 
         <div class="comment-section">
-            <h3><i class="fa-solid fa-comments"></i> Beri Penilaian & Tanggapan</h3>
-            <form id="commentForm" onsubmit="kirimKomentar(event)">
+            <h3><i class="fa-solid fa-comments"></i> Beri Penilaian & Tanggapan (Real-time)</h3>
+            <form id="commentForm">
                 <input type="text" id="nama" placeholder="Nama Anda" required>
-                <textarea id="isiKomentar" rows="4" placeholder="Tulis masukan, saran, atau nilai untuk majalah kelompok kami di sini..." required></textarea>
+                <textarea id="isiKomentar" rows="4" placeholder="Tulis masukan atau nilai di sini..." required></textarea>
                 <button type="submit" class="submit-comment-btn">Kirim Ulasan Resmi</button>
             </form>
             
             <div class="comment-list" id="commentList">
-                <div class="comment-box" id="sampleComment">
-                    <strong>Pak Dosen (Sistem Otomatis)</strong>
-                    <p>Eksekusi yang luar biasa bersih! Konsep putih minimalis ini membuat majalah digitalnya menjadi poin utama yang sangat menonjol. Kotak baca yang lebar dan besar ini membuat navigasi halaman menjadi sangat nyaman. Nilai: A!</p>
-                    <button class="delete-btn" onclick="document.getElementById('sampleComment').remove()"><i class="fa-solid fa-trash"></i></button>
                 </div>
-            </div>
         </div>
-
     </div>
 
-    <script>
-        function kirimKomentar(e) {
-            e.preventDefault(); 
-            let nama = document.getElementById('nama').value; 
-            let isi = document.getElementById('isiKomentar').value; 
-            let list = document.getElementById('commentList'); 
-            let id = 'c-' + Date.now();
-            
-            let box = document.createElement('div'); 
-            box.className = 'comment-box'; 
-            box.id = id;
-            box.innerHTML = `<strong>${nama}</strong><p>${isi}</p><button class="delete-btn" onclick="document.getElementById('${id}').remove()"><i class="fa-solid fa-trash"></i></button>`;
-            
-            list.insertBefore(box, list.firstChild); 
-            document.getElementById('commentForm').reset();
-        }
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // ==========================================
+        //  PENTING: Ganti isi di bawah ini dengan 
+        //  "Web API Key" & "App ID" dari Project Firebase-mu!
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "MASUKKAN_WEB_API_KEY_KAMU_DI_SINI", 
+            databaseURL: "https://smart-laundry-tracking-89f97-default-rtdb.firebaseio.com/",
+            projectId: "smart-laundry-tracking-89f97",
+            storageBucket: "smart-laundry-tracking-89f97.appspot.com",
+            appId: "MASUKKAN_APP_ID_KAMU_DI_SINI"
+        };
+
+        // Inisialisasi Firebase & Realtime Database
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const komentarRef = ref(db, "komentar_majalah");
+
+        // FUNGSI 1: Ambil data secara Real-time dari Realtime Database
+        onValue(komentarRef, (snapshot) => {
+            const listContainer = document.getElementById("commentList");
+            listContainer.innerHTML = ""; // Bersihkan list lama
+
+            if (!snapshot.exists()) {
+                listContainer.innerHTML = `<p style="color: #999; font-size: 13px; text-align: center;">Belum ada ulasan. Jadilah yang pertama!</p>`;
+                return;
+            }
+
+            const data = snapshot.val();
+            // Looping data dan membalik urutannya agar yang paling baru di atas
+            Object.keys(data).reverse().forEach((key) => {
+                const item = data[key];
+                let box = document.createElement('div'); 
+                box.className = 'comment-box'; 
+                box.innerHTML = `<strong>${item.nama}</strong><p>${item.isi}</p>`;
+                listContainer.appendChild(box);
+            });
+        });
+
+        // FUNGSI 2: Kirim data komentar saat form di-submit
+        document.getElementById("commentForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const namaInput = document.getElementById('nama');
+            const isiInput = document.getElementById('isiKomentar');
+
+            try {
+                await push(komentarRef, {
+                    nama: namaInput.value,
+                    isi: isiInput.value,
+                    timestamp: Date.now()
+                });
+                isiInput.value = ""; // Kosongkan kolom chat setelah kirim
+            } catch (error) {
+                alert("Gagal mengirim komentar: " + error.message);
+            }
+        });
     </script>
 </body>
 </html>
