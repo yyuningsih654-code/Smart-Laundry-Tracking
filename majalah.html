@@ -94,7 +94,7 @@
         <div class="comment-section">
             <h3><i class="fa-solid fa-comments"></i> Beri Penilaian & Tanggapan (Real-time)</h3>
             <form id="commentForm">
-                <input type="text" id="nama" placeholder="Nama Anda" required>
+                <input type="text" id="nama" placeholder="Nama Anda (Misal: Pak Dosen / Teman Kelas)" required>
                 <textarea id="isiKomentar" rows="4" placeholder="Tulis masukan atau nilai di sini..." required></textarea>
                 <button type="submit" class="submit-comment-btn">Kirim Ulasan Resmi</button>
             </form>
@@ -108,16 +108,16 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // ==========================================
-        //  PENTING: Ganti isi di bawah ini dengan 
-        //  "Web API Key" & "App ID" dari Project Firebase-mu!
-        // ==========================================
+        // KODE ASLI FIREBASE KAMU SUDAH DISUNTIKKAN DI SINI
         const firebaseConfig = {
-            apiKey: "MASUKKAN_WEB_API_KEY_KAMU_DI_SINI", 
-            databaseURL: "https://smart-laundry-tracking-89f97-default-rtdb.firebaseio.com/",
+            apiKey: "AIzaSyD4PeRoQEH6fgA-KOo8YSlur5wXjqX9fKU",
+            authDomain: "smart-laundry-tracking-89f97.firebaseapp.com",
+            databaseURL: "https://smart-laundry-tracking-89f97-default-rtdb.firebaseio.com",
             projectId: "smart-laundry-tracking-89f97",
-            storageBucket: "smart-laundry-tracking-89f97.appspot.com",
-            appId: "MASUKKAN_APP_ID_KAMU_DI_SINI"
+            storageBucket: "smart-laundry-tracking-89f97.firebasestorage.app",
+            messagingSenderId: "1008506552416",
+            appId: "1:1008506552416:web:096da539b1a555585a4305",
+            measurementId: "G-YEDS6GJ997"
         };
 
         // Inisialisasi Firebase & Realtime Database
@@ -125,10 +125,10 @@
         const db = getDatabase(app);
         const komentarRef = ref(db, "komentar_majalah");
 
-        // FUNGSI 1: Ambil data secara Real-time dari Realtime Database
+        // Ambil data secara Real-time
         onValue(komentarRef, (snapshot) => {
             const listContainer = document.getElementById("commentList");
-            listContainer.innerHTML = ""; // Bersihkan list lama
+            listContainer.innerHTML = ""; 
 
             if (!snapshot.exists()) {
                 listContainer.innerHTML = `<p style="color: #999; font-size: 13px; text-align: center;">Belum ada ulasan. Jadilah yang pertama!</p>`;
@@ -136,7 +136,6 @@
             }
 
             const data = snapshot.val();
-            // Looping data dan membalik urutannya agar yang paling baru di atas
             Object.keys(data).reverse().forEach((key) => {
                 const item = data[key];
                 let box = document.createElement('div'); 
@@ -146,7 +145,7 @@
             });
         });
 
-        // FUNGSI 2: Kirim data komentar saat form di-submit
+        // Kirim data komentar saat submit
         document.getElementById("commentForm").addEventListener("submit", async (e) => {
             e.preventDefault();
             const namaInput = document.getElementById('nama');
@@ -158,7 +157,7 @@
                     isi: isiInput.value,
                     timestamp: Date.now()
                 });
-                isiInput.value = ""; // Kosongkan kolom chat setelah kirim
+                isiInput.value = ""; 
             } catch (error) {
                 alert("Gagal mengirim komentar: " + error.message);
             }
