@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kas Iuran Kaos Remaja</title>
+    <style>
+      /* Import Font Estetik */
+      @import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap");
+
+      body {
+        font-family: "Fredoka", sans-serif;
+        background: linear-gradient(
+          135deg,
+          #e0f2fe 0%,
+          #bae6fd 50%,
+          #7dd3fc 100%
+        );
+        background-attachment: fixed;
+        min-height: 100vh;
+        margin: 0;
+        padding: 30px 15px;
+        color: #0c4a6e;
+      }
+
+      .container {
+        max-width: 850px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.95);
+        border: 4px solid #0284c7;
+        border-radius: 32px;
+        padding: 30px;
+        box-shadow: 0 16px 32px rgba(2, 132, 199, 0.15);
+        backdrop-filter: blur(10px);
+      }
+
+      h1 {
+        text-align: center;
+        margin-top: 0;
+        color: #0369a1;
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+      }
+
+      /* Ringkasan Kas / Dashboard Atas */
+      .summary-box {
+        background: linear-gradient(135deg, #bae6fd 0%, #93c5fd 100%);
+        border: 3px solid #0284c7;
+        border-radius: 20px;
+        padding: 20px;
+        text-align: center;
+        margin-bottom: 25px;
+        font-size: 20px;
+        font-weight: 600;
+        box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.5);
+      }
+
+      .summary-box span {
+        color: #e11d48;
+        font-size: 26px;
+        font-weight: 700;
+        display: block;
+        margin-top: 5px;
+      }
+
+      /* Tabel Gg Modis */
+      .table-wrapper {
+        overflow-x: auto;
+        border-radius: 16px;
+        border: 2px solid #0284c7;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+      }
+
+      th,
+      td {
+        padding: 12px 15px;
+        text-align: center;
+        font-size: 15px;
+      }
+
+      th {
+        background-color: #0284c7;
+        color: white;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 13px;
+        letter-spacing: 0.5px;
+      }
+
+      tr {
+        border-bottom: 1px solid #e0f2fe;
+        transition: background-color 0.2s;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f8fafc;
+      }
+
+      tr:hover {
+        background-color: #f0f9ff;
+      }
+
+      .name-col {
+        text-align: left;
+        font-weight: 600;
+        color: #0369a1;
+        min-width: 140px;
+      }
+
+      .nominal-info {
+        font-size: 11px;
+        color: #64748b;
+        font-weight: 400;
+        display: block;
+        margin-top: 2px;
+      }
+
+      /* Tag Khusus Diskon 5k */
+      .tag-5k {
+        color: #ea580c;
+        background: #ffedd5;
+        padding: 1px 6px;
+        border-radius: 6px;
+        font-size: 10px;
+        font-weight: 700;
+      }
+
+      /* Checkbox Keren & Lembut */
+      input[type="checkbox"] {
+        width: 22px;
+        height: 22px;
+        cursor: pointer;
+        accent-color: #0284c7;
+        border-radius: 6px;
+        transition: transform 0.1s;
+      }
+
+      input[type="checkbox"]:scale(1.1) {
+        transform: scale(1.1);
+      }
+
+      .total-person {
+        font-weight: 700;
+        color: #0284c7;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>📋 KAS IURAN KAOS REMAJA</h1>
+
+      <!-- Kotak Total Duit -->
+      <div class="summary-box">
+        💰 TOTAL KAS MASUK
+        <span id="total-kas">Rp 0</span>
+      </div>
+
+      <!-- Tabel Bendahara -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 50px">No</th>
+              <th>Nama Remaja</th>
+              <th>M1</th>
+              <th>M2</th>
+              <th>M3</th>
+              <th>M4</th>
+              <th>M5</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="daftar-iuran">
+            <!-- Data otomatis diproses oleh Javascript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script>
+      // Daftar nama 30 anak sesuai request
+      const namaRemaja = [
+        "Yuni",
+        "Tia",
+        "Faiz",
+        "Laudya",
+        "Anida",
+        "Saidun",
+        "Faizin",
+        "Adi",
+        "Rafi",
+        "Rafa",
+        "Akbar",
+        "Aldi",
+        "Rengga",
+        "Dicky",
+        "Dewi",
+        "Zahra",
+        "Zahira",
+        "Aan",
+        "Nafia",
+        "Nanda",
+        "Rizky",
+        "Bintang",
+        "Lita",
+        "Lia",
+        "Leony",
+        "Anton",
+        "Bayu",
+        "Kevin",
+        "Sheva",
+        "Via",
+      ];
+
+      const tbody = document.getElementById("daftar-iuran");
+
+      // Generate baris tabel otomatis
+      namaRemaja.forEach((nama, index) => {
+        const no = index + 1;
+
+        // UPDATE LOGIC: Tia dan Zahira yang 5k perminggu, sisanya 10k
+        const tarifPerMinggu =
+          nama === "Tia" || nama === "Zahira" ? 5000 : 10000;
+        const tagTeks =
+          tarifPerMinggu === 5000
+            ? '<span class="tag-5k">5k/mgg</span>'
+            : '<span class="nominal-info">10k/mgg</span>';
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td>${no}</td>
+            <td class="name-col">
+                ${nama}
+                ${tagTeks}
+            </td>
+            <td><input type="checkbox" class="chk" data-tarif="${tarifPerMinggu}" onchange="hitungKas()"></td>
+            <td><input type="checkbox" class="chk" data-tarif="${tarifPerMinggu}" onchange="hitungKas()"></td>
+            <td><input type="checkbox" class="chk" data-tarif="${tarifPerMinggu}" onchange="hitungKas()"></td>
+            <td><input type="checkbox" class="chk" data-tarif="${tarifPerMinggu}" onchange="hitungKas()"></td>
+            <td><input type="checkbox" class="chk" data-tarif="${tarifPerMinggu}" onchange="hitungKas()"></td>
+            <td class="total-person" id="total-mhs-${no}">Rp 0</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Fungsi hitung kas otomatis
+      function hitungKas() {
+        let grandTotal = 0;
+        const rows = tbody.getElementsByTagName("tr");
+
+        for (let i = 0; i < rows.length; i++) {
+          const checkboxes = rows[i].getElementsByClassName("chk");
+          let totalOrang = 0;
+
+          for (let j = 0; j < checkboxes.length; j++) {
+            if (checkboxes[j].checked) {
+              const tarif = parseInt(checkboxes[j].getAttribute("data-tarif"));
+              totalOrang += tarif;
+            }
+          }
+
+          // Update kolom total per anak
+          document.getElementById(`total-mhs-${i + 1}`).innerText =
+            "Rp " + totalOrang.toLocaleString("id-ID");
+          grandTotal += totalOrang;
+        }
+
+        // Update total kas besar di atas
+        document.getElementById("total-kas").innerText =
+          "Rp " + grandTotal.toLocaleString("id-ID");
+      }
+    </script>
+  </body>
+</html>
