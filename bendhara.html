@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Madanni Cookies - Kasir, Stok & Riwayat</title>
+    <title>Madanni Cookies - Kasir Terbuka</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
 
@@ -85,7 +85,6 @@
         .btn-stock-in { background: #bae6fd; }
         .btn-stock-out { background: #fecdd3; }
 
-        /* Sisi Kanan: Keranjang */
         .sidebar { display: flex; flex-direction: column; gap: 20px; }
         
         .cart-box {
@@ -111,7 +110,6 @@
         }
         .btn-checkout:active { transform: translateY(4px); box-shadow: none; }
         
-        /* Bagian Bawah: Riwayat Transaksi */
         .history-section {
             grid-column: 1 / -1; background: white; border: 4px solid var(--main-color);
             border-radius: 24px; padding: 20px; box-shadow: 0 8px 0 var(--main-color); margin-top: 10px;
@@ -149,12 +147,10 @@
         </div>
     </header>
 
-    <!-- AREA UTAMA -->
     <main class="menu-section">
         <div id="container-menu"></div>
     </main>
 
-    <!-- AREA KERANJANG -->
     <aside class="sidebar">
         <div class="cart-box">
             <h3 class="cart-title">🛒 Keranjang Belanja</h3>
@@ -168,7 +164,7 @@
         </div>
     </aside>
 
-    <!-- AREA RIWAYAT TRANSAKSI (YANG BARU) -->
+    <!-- AREA TABEL LAPORAN JUALAN (SUDAH FIX) -->
     <section class="history-section">
         <h3 style="margin-top: 0; font-size: 20px;">📋 Laporan Data Riwayat Jualan</h3>
         <div class="omzet-box">💰 Total Omzet Terkumpul: <span id="total-omzet">Rp 0</span></div>
@@ -225,7 +221,7 @@
         { id: 27, kategori: "Soft Cookies", nama: "Choco cheese", harga: 16000, stok: 20 },
         { id: 28, kategori: "Soft Cookies", nama: "Nutella", harga: 19000, stok: 20 },
         { id: 29, kategori: "Soft Cookies", nama: "Palm Cheese", harga: 16000, stok: 20 },
-        { id: 30, kategori: "Soft Cookies", nama: "Red Velvet Cheese", height: 14000, harga: 14000, stok: 20 }
+        { id: 30, kategori: "Soft Cookies", nama: "Red Velvet Cheese", harga: 14000, stok: 20 }
     ];
 
     let produkData = JSON.parse(localStorage.getItem('madanni_stok')) || masterProduk;
@@ -312,10 +308,10 @@
             if (itemKeranjang.jumlah < item.stok) {
                 itemKeranjang.jumlah++;
             } else {
-                alert("Gak bisa nambah, melebih batas stok!");
+                alert("Gak bisa nambah, melebihi batas stok!");
             }
         } else {
-            keranjang.push({ id: item.id, nama: item.nama, harga: item.harga, jumlah: 1 });
+            keranjang.push({ id: item.id, nama: item.nama, harga: item.harga, globalHarga: item.harga, jumlah: 1 });
         }
         renderKeranjang();
     }
@@ -363,7 +359,6 @@
         let totalBayar = 0;
         let detailKueArray = [];
 
-        // Potong stok dan bikin detail items
         keranjang.forEach(itemKeranjang => {
             const produkAsli = produkData.find(p => p.id === itemKeranjang.id);
             if (produkAsli) {
@@ -373,17 +368,15 @@
             detailKueArray.push(`${itemKeranjang.nama} (${itemKeranjang.jumlah}x)`);
         });
 
-        // Catat Waktu Transaksi Real-time
         const waktuSekarang = new Date().toLocaleString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit', day: 'numeric', month: 'short' });
 
-        // Simpan Data Penjualan Baru ke List Riwayat
         riwayatTransaksi.unshift({
             waktu: waktuSekarang,
             detail: detailKueArray.join(', '),
             total: totalBayar
         });
         
-        alert("🎉 Transaksi Berhasil! Data penjualan otomatis tercatat di tabel riwayat bawah!");
+        alert("🎉 Transaksi Berhasil! Data jualan otomatis tercatat!");
         
         saveData();
         keranjang = [];
@@ -393,7 +386,6 @@
         renderRiwayat();
     }
 
-    // Merender tabel laporan data penjualan di bawah
     function renderRiwayat() {
         const historyContainer = document.getElementById('history-list');
         const omzetContainer = document.getElementById('total-omzet');
@@ -445,4 +437,4 @@
 </script>
 
 </body>
-</html>
+</html>                                 
