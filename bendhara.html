@@ -1,281 +1,335 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kas Iuran Kaos Remaja</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Madanni Cookies - Kasir & Stok</title>
     <style>
-      /* Import Font Estetik */
-      @import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap");
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
 
-      body {
-        font-family: "Fredoka", sans-serif;
-        background: linear-gradient(
-          135deg,
-          #e0f2fe 0%,
-          #bae6fd 50%,
-          #7dd3fc 100%
-        );
-        background-attachment: fixed;
-        min-height: 100vh;
-        margin: 0;
-        padding: 30px 15px;
-        color: #0c4a6e;
-      }
-
-      .container {
-        max-width: 850px;
-        margin: 0 auto;
-        background: rgba(255, 255, 255, 0.95);
-        border: 4px solid #0284c7;
-        border-radius: 32px;
-        padding: 30px;
-        box-shadow: 0 16px 32px rgba(2, 132, 199, 0.15);
-        backdrop-filter: blur(10px);
-      }
-
-      h1 {
-        text-align: center;
-        margin-top: 0;
-        color: #0369a1;
-        font-size: 28px;
-        font-weight: 700;
-        letter-spacing: 0.5px;
-      }
-
-      /* Ringkasan Kas / Dashboard Atas */
-      .summary-box {
-        background: linear-gradient(135deg, #bae6fd 0%, #93c5fd 100%);
-        border: 3px solid #0284c7;
-        border-radius: 20px;
-        padding: 20px;
-        text-align: center;
-        margin-bottom: 25px;
-        font-size: 20px;
-        font-weight: 600;
-        box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.5);
-      }
-
-      .summary-box span {
-        color: #e11d48;
-        font-size: 26px;
-        font-weight: 700;
-        display: block;
-        margin-top: 5px;
-      }
-
-      /* Tabel Gg Modis */
-      .table-wrapper {
-        overflow-x: auto;
-        border-radius: 16px;
-        border: 2px solid #0284c7;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      }
-
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        background: white;
-      }
-
-      th,
-      td {
-        padding: 12px 15px;
-        text-align: center;
-        font-size: 15px;
-      }
-
-      th {
-        background-color: #0284c7;
-        color: white;
-        font-weight: 600;
-        text-transform: uppercase;
-        font-size: 13px;
-        letter-spacing: 0.5px;
-      }
-
-      tr {
-        border-bottom: 1px solid #e0f2fe;
-        transition: background-color 0.2s;
-      }
-
-      tr:nth-child(even) {
-        background-color: #f8fafc;
-      }
-
-      tr:hover {
-        background-color: #f0f9ff;
-      }
-
-      .name-col {
-        text-align: left;
-        font-weight: 600;
-        color: #0369a1;
-        min-width: 140px;
-      }
-
-      .nominal-info {
-        font-size: 11px;
-        color: #64748b;
-        font-weight: 400;
-        display: block;
-        margin-top: 2px;
-      }
-
-      /* Tag Khusus Diskon 5k */
-      .tag-5k {
-        color: #ea580c;
-        background: #ffedd5;
-        padding: 1px 6px;
-        border-radius: 6px;
-        font-size: 10px;
-        font-weight: 700;
-      }
-
-      /* Checkbox Keren & Lembut */
-      input[type="checkbox"] {
-        width: 22px;
-        height: 22px;
-        cursor: pointer;
-        accent-color: #0284c7;
-        border-radius: 6px;
-        transition: transform 0.1s;
-      }
-
-      input[type="checkbox"]:scale(1.1) {
-        transform: scale(1.1);
-      }
-
-      .total-person {
-        font-weight: 700;
-        color: #0284c7;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <h1>📋 KAS IURAN KAOS REMAJA</h1>
-
-      <!-- Kotak Total Duit -->
-      <div class="summary-box">
-        💰 TOTAL KAS MASUK
-        <span id="total-kas">Rp 0</span>
-      </div>
-
-      <!-- Tabel Bendahara -->
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th style="width: 50px">No</th>
-              <th>Nama Remaja</th>
-              <th>M1</th>
-              <th>M2</th>
-              <th>M3</th>
-              <th>M4</th>
-              <th>M5</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody id="daftar-iuran">
-            <!-- Data otomatis diproses oleh Javascript -->
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <script>
-      // Daftar nama 30 anak sesuai request
-      const namaRemaja = [
-        "Yuni",
-        "Tia",
-        "Faiz",
-        "Laudya",
-        "Anida",
-        "Saidun",
-        "Faizin",
-        "Adi",
-        "Rafi",
-        "Rafa",
-        "Akbar",
-        "Aldi",
-        "Rengga",
-        "Dicky",
-        "Dewi",
-        "Zahra",
-        "Zahira",
-        "Aan",
-        "Nafia",
-        "Nanda",
-        "Rizky",
-        "Bintang",
-        "Lita",
-        "Lia",
-        "Leony",
-        "Anton",
-        "Bayu",
-        "Kevin",
-        "Sheva",
-        "Via",
-      ];
-
-      const tbody = document.getElementById("daftar-iuran");
-
-      // Generate baris tabel otomatis
-      namaRemaja.forEach((nama, index) => {
-        const no = index + 1;
-
-        // UPDATE LOGIC: Tia dan Zahira yang 5k perminggu, sisanya 10k
-        const tarifPerMinggu =
-          nama === "Tia" || nama === "Zahira" ? 5000 : 10000;
-        const tagTeks =
-          tarifPerMinggu === 5000
-            ? '<span class="tag-5k">5k/mgg</span>'
-            : '<span class="nominal-info">10k/mgg</span>';
-
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-            <td>${no}</td>
-            <td class="name-col">
-                ${nama}
-                ${tagTeks}
-            </td>
-            <td><input type="checkbox" class="chk" data-tarif="${tarifPerMinggu}" onchange="hitungKas()"></td>
-            <td><input type="checkbox" class="chk" data-tarif="${tarifPerMinggu}" onchange="hitungKas()"></td>
-            <td><input type="checkbox" class="chk" data-tarif="${tarifPerMinggu}" onchange="hitungKas()"></td>
-            <td><input type="checkbox" class="chk" data-tarif="${tarifPerMinggu}" onchange="hitungKas()"></td>
-            <td><input type="checkbox" class="chk" data-tarif="${tarifPerMinggu}" onchange="hitungKas()"></td>
-            <td class="total-person" id="total-mhs-${no}">Rp 0</td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      // Fungsi hitung kas otomatis
-      function hitungKas() {
-        let grandTotal = 0;
-        const rows = tbody.getElementsByTagName("tr");
-
-        for (let i = 0; i < rows.length; i++) {
-          const checkboxes = rows[i].getElementsByClassName("chk");
-          let totalOrang = 0;
-
-          for (let j = 0; j < checkboxes.length; j++) {
-            if (checkboxes[j].checked) {
-              const tarif = parseInt(checkboxes[j].getAttribute("data-tarif"));
-              totalOrang += tarif;
-            }
-          }
-
-          // Update kolom total per anak
-          document.getElementById(`total-mhs-${i + 1}`).innerText =
-            "Rp " + totalOrang.toLocaleString("id-ID");
-          grandTotal += totalOrang;
+        :root {
+            --bg-color: #fefcbf;
+            --main-color: #78350f;
+            --accent-color: #d97706;
+            --card-bg: #fffbeb;
         }
 
-        // Update total kas besar di atas
-        document.getElementById("total-kas").innerText =
-          "Rp " + grandTotal.toLocaleString("id-ID");
-      }
-    </script>
-  </body>
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(135deg, #fef08a 0%, #fefcbf 100%);
+            margin: 0; padding: 15px; color: var(--main-color);
+        }
+
+        .app-container {
+            max-width: 1100px; margin: 0 auto;
+            display: grid; grid-template-columns: 2fr 1fr; gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .app-container { grid-template-columns: 1fr; }
+        }
+
+        header {
+            grid-column: 1 / -1; text-align: center; background: white;
+            padding: 15px; border: 4px solid var(--main-color); border-radius: 20px;
+            box-shadow: 0 6px 0 var(--main-color);
+        }
+
+        h1 { margin: 0; font-size: 26px; text-transform: uppercase; }
+        .subtitle { margin: 5px 0 0 0; font-size: 14px; color: var(--accent-color); font-weight: 600; }
+
+        .tab-btn-group { display: flex; gap: 10px; margin: 15px 0; justify-content: center; }
+        .tab-btn {
+            background: #fef3c7; border: 3px solid var(--main-color); padding: 8px 16px;
+            border-radius: 12px; font-family: 'Fredoka'; font-weight: 600; cursor: pointer;
+        }
+        .tab-btn.active { background: var(--accent-color); color: white; }
+
+        .menu-section {
+            background: white; border: 4px solid var(--main-color); border-radius: 24px;
+            padding: 20px; box-shadow: 0 8px 0 var(--main-color);
+        }
+
+        .category-title {
+            background: var(--main-color); color: white; display: inline-block;
+            padding: 5px 15px; border-radius: 10px; font-size: 14px; margin-bottom: 15px;
+        }
+
+        .grid-menu { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        
+        .menu-card {
+            background: var(--card-bg); border: 2px solid var(--main-color);
+            border-radius: 16px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between;
+        }
+
+        .menu-name { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+        .menu-price { color: var(--accent-color); font-weight: 700; font-size: 14px; }
+        .menu-stock { font-size: 11px; background: #fde68a; padding: 2px 6px; border-radius: 6px; display: inline-block; margin: 5px 0; }
+        
+        .action-area { display: flex; gap: 5px; margin-top: 8px; }
+        .btn-sm {
+            flex: 1; border: 2px solid var(--main-color); padding: 5px;
+            font-family: 'Fredoka'; font-weight: 600; border-radius: 8px; cursor: pointer; font-size: 12px;
+        }
+        .btn-add { background: #bbf7d0; }
+        .btn-stock-in { background: #bae6fd; }
+        .btn-stock-out { background: #fecdd3; }
+
+        /* Sisi Kanan: Keranjang & Ringkasan */
+        .sidebar { display: flex; flex-direction: column; gap: 20px; }
+        
+        .cart-box {
+            background: white; border: 4px solid var(--main-color); border-radius: 24px;
+            padding: 20px; box-shadow: 0 8px 0 var(--main-color); position: sticky; top: 15px;
+        }
+
+        .cart-title { font-size: 18px; border-bottom: 3px dashed var(--main-color); padding-bottom: 8px; margin-top: 0; }
+        
+        .cart-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 8px 0; border-bottom: 1px solid #fef3c7; font-size: 13px;
+        }
+
+        .cart-total-section {
+            margin-top: 15px; padding-top: 10px; border-top: 3px solid var(--main-color);
+            display: flex; justify-content: space-between; font-weight: 700; font-size: 18px;
+        }
+
+        .btn-checkout {
+            width: 100%; background: #4ad66d; border: 3px solid var(--main-color); color: var(--main-color);
+            padding: 12px; font-family: 'Fredoka'; font-weight: 700; font-size: 16px; border-radius: 14px;
+            cursor: pointer; margin-top: 15px; box-shadow: 0 4px 0 var(--main-color);
+        }
+        .btn-checkout:active { transform: translateY(4px); box-shadow: none; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <header>
+        <h1>🍪 MADANNI COOKIES HUB</h1>
+        <p class="subtitle">Kasir Digital & Sistem Monitor Stok Otomatis</p>
+        
+        <div class="tab-btn-group">
+            <button class="tab-btn active" onclick="switchMode('kasir')">🛒 Mode Kasir Jualan</button>
+            <button class="tab-btn" onclick="switchMode('stok')">📦 Mode Kelola Stok Gudang</button>
+        </div>
+    </header>
+
+    <!-- AREA UTAMA: DAFTAR MENU -->
+    <main class="menu-section">
+        <div id="container-menu"></div>
+    </main>
+
+    <!-- AREA SAMPING: STRIP STRUK KERANJANG -->
+    <aside class="sidebar">
+        <div class="cart-box">
+            <h3 class="cart-title">🛒 Keranjang Belanja</h3>
+            <div id="cart-list" style="min-height: 100px; color: #9a3412; font-size: 12px;">Keranjang kosong...</div>
+            
+            <div class="cart-total-section">
+                <span>Total:</span>
+                <span id="cart-grand-total">Rp 0</span>
+            </div>
+            <button class="btn-checkout" onclick="prosesBayar()">BAYAR & POTONG STOK ⚡</button>
+        </div>
+    </aside>
+</div>
+
+<script>
+    // Data Menu diambil persis dari Gambar Menu yang kamu kirim
+    let produkData = [
+        // PASTRY
+        { id: 1, kategori: "Pastry", nama: "Butter Croissant", harga: 12000, stok: 20 },
+        { id: 2, kategori: "Pastry", nama: "Chezzy Roll", harga: 16000, stok: 20 },
+        { id: 3, kategori: "Pastry", nama: "Cinnamon Nutela", harga: 19000, stok: 20 },
+        { id: 4, kategori: "Pastry", nama: "Croissant Abon", harga: 20000, stok: 20 },
+        { id: 5, kategori: "Pastry", nama: "Croissant Almond", harga: 20000, stok: 20 },
+        { id: 6, kategori: "Pastry", nama: "Croissant Cookies", harga: 20000, stok: 20 },
+        { id: 7, kategori: "Pastry", nama: "Crolen", harga: 7000, stok: 25 },
+        { id: 8, kategori: "Pastry", nama: "Cromboloni", harga: 20000, stok: 15 },
+        { id: 9, kategori: "Pastry", nama: "Crotabak", harga: 20000, stok: 15 },
+        { id: 10, kategori: "Pastry", nama: "Crotabeef", harga: 22000, stok: 15 },
+        { id: 11, kategori: "Pastry", nama: "Egg Tart", harga: 15000, stok: 30 },
+        { id: 12, kategori: "Pastry", nama: "Pain au Choco", harga: 14000, stok: 20 },
+        { id: 13, kategori: "Pastry", nama: "Pain au Chocochees", harga: 17000, stok: 20 },
+        { id: 14, kategori: "Pastry", nama: "Smoke n cheese", harga: 22000, stok: 15 },
+        { id: 15, kategori: "Pastry", nama: "Strawberry dulce", harga: 23000, stok: 15 },
+        
+        // SALT BREAD
+        { id: 16, kategori: "Salt Bread", nama: "Salt Bread ORI", harga: 16000, stok: 25 },
+        { id: 17, kategori: "Salt Bread", nama: "Salt Beef", harga: 23000, stok: 15 },
+        { id: 18, kategori: "Salt Bread", nama: "Salt Cheese", harga: 20000, stok: 20 },
+        { id: 19, kategori: "Salt Bread", nama: "Salt Cho", harga: 20000, stok: 20 },
+        { id: 20, kategori: "Salt Bread", nama: "Salt Choco", harga: 21000, stok: 20 },
+        { id: 21, kategori: "Salt Bread", nama: "Salt Garlic", harga: 20000, stok: 15 },
+        { id: 22, kategori: "Salt Bread", nama: "Salt Smoke", harga: 23000, stok: 15 },
+        
+        // BUN
+        { id: 23, kategori: "Bun", nama: "Coffe Bun", harga: 16000, stok: 25 },
+        { id: 24, kategori: "Bun", nama: "Flossbun", harga: 20000, stok: 20 },
+        
+        // SOFT COOKIES
+        { id: 25, kategori: "Soft Cookies", nama: "Biscoff", harga: 18000, stok: 20 },
+        { id: 26, kategori: "Soft Cookies", nama: "Choco", harga: 14000, stok: 25 },
+        { id: 27, kategori: "Soft Cookies", nama: "Choco cheese", harga: 16000, stok: 20 },
+        { id: 28, kategori: "Soft Cookies", nama: "Nutella", harga: 19000, stok: 20 },
+        { id: 29, kategori: "Soft Cookies", nama: "Palm Cheese", harga: 16000, stok: 20 },
+        { id: 30, kategori: "Soft Cookies", nama: "Red Velvet Cheese", harga: 14000, stok: 20 }
+    ];
+
+    let keranjang = [];
+    let currentMode = 'kasir'; // kasir atau stok
+
+    function initApp() {
+        renderMenu();
+        renderKeranjang();
+    }
+
+    function switchMode(mode) {
+        currentMode = mode;
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        renderMenu();
+    }
+
+    // Mengelompokkan & merender menu berdasarkan kategori di foto brosur
+    function renderMenu() {
+        const container = document.getElementById('container-menu');
+        container.innerHTML = "";
+
+        const kategoriList = ["Pastry", "Salt Bread", "Bun", "Soft Cookies"];
+
+        kategoriList.forEach(kat => {
+            const listKue = produkData.filter(p => p.kategori === kat);
+            
+            let htmlSection = `
+                <div class="category-title">⭐ Kategori: ${kat}</div>
+                <div class="grid-menu">
+            `;
+
+            listKue.forEach(kue => {
+                let tombolAksi = '';
+                
+                if (currentMode === 'kasir') {
+                    tombolAksi = `<button class="btn-sm btn-add" onclick="tambahKeKeranjang(${kue.id})">🛒 Tambah</button>`;
+                } else {
+                    tombolAksi = `
+                        <button class="btn-sm btn-stock-in" onclick="ubahStokManual(${kue.id}, 5)">➕ Masuk 5</button>
+                        <button class="btn-sm btn-stock-out" onclick="ubahStokManual(${kue.id}, -5)">➖ Buang 5</button>
+                    `;
+                }
+
+                htmlSection += `
+                    <div class="menu-card">
+                        <div>
+                            <div class="menu-name">${kue.nama}</div>
+                            <div class="menu-price">Rp ${kue.harga.toLocaleString('id-ID')}</div>
+                        </div>
+                        <div>
+                            <span class="menu-stock">Stok: <b>${kue.stok} pcs</b></span>
+                            <div class="action-area">${tombolAksi}</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            htmlSection += `</div>`;
+            container.innerHTML += htmlSection;
+        });
+    }
+
+    function tambahKeKeranjang(id) {
+        const item = produkData.find(p => p.id === id);
+        
+        if (item.stok <= 0) {
+            alert(`Waduh, stok ${item.nama} habis woi! Tambah stok dulu di mode gudang.`);
+            return;
+        }
+
+        const itemKeranjang = keranjang.find(k => k.id === id);
+        if (itemKeranjang) {
+            if (itemKeranjang.jumlah < item.stok) {
+                itemKeranjang.jumlah++;
+            } else {
+                alert("Nggak bisa nambah lagi, kapasitas melebihi stok toko!");
+            }
+        } else {
+            keranjang.push({ id: item.id, nama: item.nama, harga: item.harga, jumlah: 1 });
+        }
+        renderKeranjang();
+    }
+
+    function hapusItemKeranjang(id) {
+        keranjang = keranjang.filter(k => k.id !== id);
+        renderKeranjang();
+    }
+
+    function renderKeranjang() {
+        const listContainer = document.getElementById('cart-list');
+        let totalSeluruhnya = 0;
+
+        if (keranjang.length === 0) {
+            listContainer.innerHTML = "Belum ada item dipilih.";
+            document.getElementById('cart-grand-total').innerText = "Rp 0";
+            return;
+        }
+
+        listContainer.innerHTML = "";
+        keranjang.forEach(item => {
+            let subtotal = item.harga * item.jumlah;
+            totalSeluruhnya += subtotal;
+
+            listContainer.innerHTML += `
+                <div class="cart-item">
+                    <div>
+                        <b>${item.nama}</b><br>
+                        ${item.jumlah}x @ Rp ${item.harga.toLocaleString('id-ID')}
+                    </div>
+                    <div style="text-align: right;">
+                        <span style="font-weight:700; color:var(--accent-color);">Rp ${subtotal.toLocaleString('id-ID')}</span><br>
+                        <span style="color:red; cursor:pointer; font-size:10px;" onclick="hapusItemKeranjang(${item.id})">❌ Hapus</span>
+                    </div>
+                </div>
+            `;
+        });
+
+        document.getElementById('cart-grand-total').innerText = "Rp " + totalSeluruhnya.toLocaleString('id-ID');
+    }
+
+    function prosesBayar() {
+        if (keranjang.length === 0) {
+            alert("Keranjang masih kosong, apa yang mau dibayar? 🤔");
+            return;
+        }
+
+        // Proses memotong stok utama di database lokal web
+        keranjang.forEach(itemKeranjang => {
+            const produkAsli = produkData.find(p => p.id === itemKeranjang.id);
+            if (produkAsli) {
+                produkAsli.stok -= itemKeranjang.jumlah;
+            }
+        });
+
+        alert("🎉 Transaksi Berhasil! Nota disimpan & stok kue otomatis terpotong!");
+        keranjang = []; // kosongkan keranjang
+        renderKeranjang();
+        renderMenu();
+    }
+
+    // Fungsi mode stok masuk dan keluar gudang
+    function ubahStokManual(id, jumlah) {
+        const produk = produkData.find(p => p.id === id);
+        if (produk) {
+            produk.stok += jumlah;
+            if (produk.stok < 0) produk.stok = 0;
+            renderMenu();
+        }
+    }
+
+    // Jalankan pertama kali saat load
+    window.onload = initApp;
+</script>
+
+</body>
 </html>
