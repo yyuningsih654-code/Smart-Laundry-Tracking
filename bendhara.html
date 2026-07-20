@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Madanni Cookies - Kasir Terbuka</title>
+    <title>Madanni Cookies - Kasir Bebas Input</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
 
@@ -76,14 +76,21 @@
         .menu-price { color: var(--accent-color); font-weight: 700; font-size: 14px; }
         .menu-stock { font-size: 11px; background: #fde68a; padding: 2px 6px; border-radius: 6px; display: inline-block; margin: 5px 0; }
         
-        .action-area { display: flex; gap: 5px; margin-top: 8px; }
+        .action-area { display: flex; flex-direction: column; gap: 5px; margin-top: 8px; }
+        .stock-input-group { display: flex; gap: 4px; align-items: center; width: 100%; }
+        
+        .input-qty {
+            width: 45px; padding: 4px; text-align: center; border: 2px solid var(--main-color);
+            border-radius: 6px; font-family: 'Fredoka'; font-weight: 600; font-size: 13px;
+        }
+        
         .btn-sm {
             flex: 1; border: 2px solid var(--main-color); padding: 5px;
             font-family: 'Fredoka'; font-weight: 600; border-radius: 8px; cursor: pointer; font-size: 12px;
         }
-        .btn-add { background: #bbf7d0; }
-        .btn-stock-in { background: #bae6fd; }
-        .btn-stock-out { background: #fecdd3; }
+        .btn-add { background: #bbf7d0; width: 100%; }
+        .btn-stock-in { background: #bae6fd; padding: 4px; }
+        .btn-stock-out { background: #fecdd3; padding: 4px; }
 
         .sidebar { display: flex; flex-direction: column; gap: 20px; }
         
@@ -164,7 +171,6 @@
         </div>
     </aside>
 
-    <!-- AREA TABEL LAPORAN JUALAN (SUDAH FIX) -->
     <section class="history-section">
         <h3 style="margin-top: 0; font-size: 20px;">📋 Laporan Data Riwayat Jualan</h3>
         <div class="omzet-box">💰 Total Omzet Terkumpul: <span id="total-omzet">Rp 0</span></div>
@@ -268,11 +274,15 @@
                 listKue.forEach(kue => {
                     let tombolAksi = '';
                     if (currentMode === 'kasir') {
-                        tombolAksi = `<button class="btn-sm btn-add" onclick="tambahKeKeranjang(${kue.id})">🛒 Tambah</button>`;
+                        tombolAksi = `<button class="btn-add btn-sm" onclick="tambahKeKeranjang(${kue.id})">🛒 Tambah</button>`;
                     } else {
+                        // FITUR BARU: Input Angka Bebas di Sini!
                         tombolAksi = `
-                            <button class="btn-sm btn-stock-in" onclick="ubahStokManual(${kue.id}, 5)">➕ Masuk 5</button>
-                            <button class="btn-sm btn-stock-out" onclick="ubahStokManual(${kue.id}, -5)">➖ Buang 5</button>
+                            <div class="stock-input-group">
+                                <input type="number" id="qty-${kue.id}" class="input-qty" value="1" min="1">
+                                <button class="btn-sm btn-stock-in" onclick="ubahStokBebas(${kue.id}, 'tambah')">➕</button>
+                                <button class="btn-sm btn-stock-out" onclick="ubahStokBebas(${kue.id}, 'kurang')">➖</button>
+                            </div>
                         `;
                     }
 
@@ -311,7 +321,7 @@
                 alert("Gak bisa nambah, melebihi batas stok!");
             }
         } else {
-            keranjang.push({ id: item.id, nama: item.nama, harga: item.harga, globalHarga: item.harga, jumlah: 1 });
+            keranjang.push({ id: item.id, nama: item.nama, harga: item.harga, jumlah: 1 });
         }
         renderKeranjang();
     }
@@ -413,11 +423,19 @@
         omzetContainer.innerText = "Rp " + totalOmzet.toLocaleString('id-ID');
     }
 
-    function ubahStokManual(id, jumlah) {
+    // FUNGSI BARU: Ambil nilai angka bebas dari input user
+    function ubahStokBebas(id, aksi) {
         const produk = produkData.find(p => p.id === id);
+        const inputElement = document.getElementById(`qty-${id}`);
+        const nilaiInput = parseInt(inputElement.value) || 1;
+
         if (produk) {
-            produk.stok += jumlah;
-            if (produk.stok < 0) produk.stok = 0;
+            if (aksi === 'tambah') {
+                produk.stok += nilaiInput;
+            } else if (aksi === 'kurang') {
+                produk.stok -= nilaiInput;
+                if (produk.stok < 0) produk.stok = 0;
+            }
             saveData();
             renderMenu();
         }
@@ -437,4 +455,4 @@
 </script>
 
 </body>
-</html>                                 
+    </html>               
