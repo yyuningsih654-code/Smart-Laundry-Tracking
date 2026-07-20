@@ -65,7 +65,7 @@
             padding: 5px 15px; border-radius: 10px; font-size: 14px; margin-bottom: 15px;
         }
 
-        .grid-menu { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
+        .grid-menu { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
         
         .menu-card {
             background: var(--card-bg); border: 2px solid var(--main-color);
@@ -74,9 +74,14 @@
 
         .menu-name { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
         .menu-price { color: var(--accent-color); font-weight: 700; font-size: 14px; }
-        .menu-stock { font-size: 11px; background: #fde68a; padding: 2px 6px; border-radius: 6px; display: inline-block; margin: 5px 0; }
         
-        .action-area { display: flex; flex-direction: column; gap: 5px; margin-top: 8px; }
+        .stok-info-box {
+            background: #fde68a; padding: 6px 8px; border-radius: 8px;
+            margin: 6px 0; font-size: 11px; font-weight: 600; border: 1px solid var(--main-color);
+        }
+        .stok-info-box.habis { background: #fecdd3; color: #991b1b; }
+
+        .action-area { display: flex; flex-direction: column; gap: 5px; margin-top: 4px; }
         .stock-input-group { display: flex; gap: 4px; align-items: center; width: 100%; }
         
         .input-qty {
@@ -105,6 +110,16 @@
             padding: 8px 0; border-bottom: 1px solid #fef3c7; font-size: 13px;
         }
 
+        .payment-method-box {
+            margin-top: 15px; padding: 10px; background: #fff8f0;
+            border: 2px solid var(--main-color); border-radius: 12px;
+        }
+        .payment-method-box label { font-weight: 700; font-size: 13px; display: block; margin-bottom: 5px; }
+        .payment-select {
+            width: 100%; padding: 8px; border: 2px solid var(--main-color);
+            border-radius: 8px; font-family: 'Fredoka'; font-weight: 600; font-size: 13px; outline: none;
+        }
+
         .cart-total-section {
             margin-top: 15px; padding-top: 10px; border-top: 3px solid var(--main-color);
             display: flex; justify-content: space-between; font-weight: 700; font-size: 18px;
@@ -121,15 +136,39 @@
             grid-column: 1 / -1; background: white; border: 4px solid var(--main-color);
             border-radius: 24px; padding: 20px; box-shadow: 0 8px 0 var(--main-color); margin-top: 10px;
         }
-        .omzet-box {
-            background: #bbf7d0; padding: 12px; border: 2px solid var(--main-color);
-            border-radius: 12px; font-size: 16px; font-weight: 700; margin-bottom: 15px; display: inline-block;
+
+        /* GRID REKAP KEUANGAN */
+        .rekap-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px; margin-bottom: 15px;
         }
+        .rekap-card {
+            padding: 12px 15px; border: 2px solid var(--main-color); border-radius: 14px;
+            font-size: 14px; font-weight: 600; display: flex; flex-direction: column; gap: 4px;
+        }
+        .rekap-cash { background: #fed7aa; }
+        .rekap-qris { background: #e0e7ff; }
+        .rekap-total { background: #bbf7d0; grid-column: span 1; }
+        .rekap-val { font-size: 18px; font-weight: 700; }
+
         .history-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         .history-table th, .history-table td {
             border: 1px solid var(--main-color); padding: 10px; text-align: left; font-size: 13px;
         }
         .history-table th { background: #fde68a; }
+
+        .badge-metode {
+            display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 700;
+        }
+        .badge-cash { background: #fed7aa; color: #9a3412; }
+        .badge-qris { background: #e0e7ff; color: #3730a3; }
+
+        .btn-delete-transaksi {
+            background: #fecdd3; border: 1px solid #991b1b; color: #991b1b;
+            padding: 4px 8px; border-radius: 6px; font-family: 'Fredoka';
+            font-weight: 600; font-size: 11px; cursor: pointer;
+        }
+        .btn-delete-transaksi:hover { background: #f87171; color: white; }
 
         .btn-reset-all {
             background: #ffcbd1; border: 2px solid #78350f; font-family: 'Fredoka';
@@ -161,8 +200,16 @@
     <aside class="sidebar">
         <div class="cart-box">
             <h3 class="cart-title">🛒 Keranjang Belanja</h3>
-            <div id="cart-list" style="min-height: 100px; color: #9a3412; font-size: 12px;">Keranjang kosong...</div>
+            <div id="cart-list" style="min-height: 80px; color: #9a3412; font-size: 12px;">Keranjang kosong...</div>
             
+            <div class="payment-method-box">
+                <label for="metode-bayar">💳 Metode Pembayaran:</label>
+                <select id="metode-bayar" class="payment-select">
+                    <option value="CASH">💵 Cash / Tunai</option>
+                    <option value="QRIS">📱 QRIS / Transfer</option>
+                </select>
+            </div>
+
             <div class="cart-total-section">
                 <span>Total:</span>
                 <span id="cart-grand-total">Rp 0</span>
@@ -172,22 +219,39 @@
     </aside>
 
     <section class="history-section">
-        <h3 style="margin-top: 0; font-size: 20px;">📋 Laporan Data Riwayat Jualan</h3>
-        <div class="omzet-box">💰 Total Omzet Terkumpul: <span id="total-omzet">Rp 0</span></div>
+        <h3 style="margin-top: 0; font-size: 20px;">📋 Laporan & Rekap Penjualan</h3>
+        
+        <!-- DASHBOARD RINGKASAN CASH, QRIS, & TOTAL -->
+        <div class="rekap-grid">
+            <div class="rekap-card rekap-cash">
+                <span>💵 Total Cash:</span>
+                <span class="rekap-val" id="total-cash">Rp 0</span>
+            </div>
+            <div class="rekap-card rekap-qris">
+                <span>📱 Total QRIS:</span>
+                <span class="rekap-val" id="total-qris">Rp 0</span>
+            </div>
+            <div class="rekap-card rekap-total">
+                <span>💰 Total Pendapatan (Cash + QRIS):</span>
+                <span class="rekap-val" id="total-omzet">Rp 0</span>
+            </div>
+        </div>
         
         <div style="overflow-x: auto;">
             <table class="history-table">
                 <thead>
                     <tr>
-                        <th style="width: 50px;">No</th>
-                        <th style="width: 150px;">Waktu Belanja</th>
+                        <th style="width: 40px;">No</th>
+                        <th style="width: 130px;">Waktu Belanja</th>
                         <th>Detail Items Kue</th>
-                        <th style="width: 150px;">Total Bayar</th>
+                        <th style="width: 100px;">Metode</th>
+                        <th style="width: 120px;">Total Bayar</th>
+                        <th style="width: 70px; text-align: center;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody id="history-list">
                     <tr>
-                        <td colspan="4" style="text-align: center; color: #9a3412;">Belum ada data penjualan masuk hari ini.</td>
+                        <td colspan="6" style="text-align: center; color: #9a3412;">Belum ada data penjualan.</td>
                     </tr>
                 </tbody>
             </table>
@@ -197,62 +261,43 @@
 </div>
 
 <script>
-    // DATA MASTER TERUPDATE (Sudah Termasuk Muffin & Kunafa)
     const masterProduk = [
-        { id: 1, kategori: "Pastry", nama: "Butter Croissant", harga: 12000, stok: 20 },
-        { id: 2, kategori: "Pastry", nama: "Chezzy Roll", harga: 16000, stok: 20 },
-        { id: 3, kategori: "Pastry", nama: "Cinnamon Nutela", harga: 19000, stok: 20 },
-        { id: 4, kategori: "Pastry", nama: "Croissant Abon", harga: 20000, stok: 20 },
-        { id: 5, kategori: "Pastry", nama: "Croissant Almond", harga: 20000, stok: 20 },
-        { id: 6, kategori: "Pastry", nama: "Croissant Cookies", harga: 20000, stok: 20 },
-        { id: 7, kategori: "Pastry", nama: "Crolen", harga: 7000, stok: 25 },
-        { id: 8, kategori: "Pastry", nama: "Cromboloni", harga: 20000, stok: 15 },
-        { id: 9, kategori: "Pastry", nama: "Crotabak", harga: 20000, stok: 15 },
-        { id: 10, kategori: "Pastry", nama: "Crotabeef", harga: 22000, stok: 15 },
-        { id: 11, kategori: "Pastry", nama: "Egg Tart", harga: 15000, stok: 30 },
-        { id: 12, kategori: "Pastry", nama: "Pain au Choco", harga: 14000, stok: 20 },
-        { id: 13, kategori: "Pastry", nama: "Pain au Chocochees", harga: 17000, stok: 20 },
-        { id: 14, kategori: "Pastry", nama: "Smoke n cheese", harga: 22000, stok: 15 },
-        { id: 15, kategori: "Pastry", nama: "Strawberry dulce", harga: 23000, stok: 15 },
-        { id: 16, kategori: "Salt Bread", nama: "Salt Bread ORI", harga: 16000, stok: 25 },
-        { id: 17, kategori: "Salt Bread", nama: "Salt Beef", harga: 23000, stok: 15 },
-        { id: 18, kategori: "Salt Bread", nama: "Salt Cheese", harga: 20000, stok: 20 },
-        { id: 19, kategori: "Salt Bread", nama: "Salt Cho", harga: 20000, stok: 20 },
-        { id: 20, kategori: "Salt Bread", nama: "Salt Choco", harga: 21000, stok: 20 },
-        { id: 21, kategori: "Salt Bread", nama: "Salt Garlic", harga: 20000, stok: 15 },
-        { id: 22, kategori: "Salt Bread", nama: "Salt Smoke", harga: 23000, stok: 15 },
-        { id: 31, kategori: "Salt Bread", nama: "Salt Bread Kunafa", harga: 45000, stok: 10 },
-        { id: 23, kategori: "Bun", nama: "Coffe Bun", harga: 16000, stok: 25 },
-        { id: 24, kategori: "Bun", nama: "Flossbun", harga: 20000, stok: 20 },
-        { id: 25, kategori: "Soft Cookies", nama: "Biscoff", harga: 18000, stok: 20 },
-        { id: 26, kategori: "Soft Cookies", nama: "Choco", harga: 14000, stok: 25 },
-        { id: 27, kategori: "Soft Cookies", nama: "Choco cheese", harga: 16000, stok: 20 },
-        { id: 28, kategori: "Soft Cookies", nama: "Nutella", harga: 19000, stok: 20 },
-        { id: 29, kategori: "Soft Cookies", nama: "Palm Cheese", harga: 16000, stok: 20 },
-        { id: 30, kategori: "Soft Cookies", nama: "Red Velvet Cheese", harga: 14000, stok: 20 },
-        { id: 32, kategori: "Soft Cookies", nama: "Muffin", harga: 8000, stok: 20 }
+        { id: 1, kategori: "Pastry", nama: "Butter Croissant", harga: 12000, stokAwal: 20, stok: 20 },
+        { id: 2, kategori: "Pastry", nama: "Chezzy Roll", harga: 16000, stokAwal: 20, stok: 20 },
+        { id: 3, kategori: "Pastry", nama: "Cinnamon Nutela", harga: 19000, stokAwal: 20, stok: 20 },
+        { id: 4, kategori: "Pastry", nama: "Croissant Abon", harga: 20000, stokAwal: 20, stok: 20 },
+        { id: 5, kategori: "Pastry", nama: "Croissant Almond", harga: 20000, stokAwal: 20, stok: 20 },
+        { id: 6, kategori: "Pastry", nama: "Croissant Cookies", harga: 20000, stokAwal: 20, stok: 20 },
+        { id: 7, kategori: "Pastry", nama: "Crolen", harga: 7000, stokAwal: 25, stok: 25 },
+        { id: 8, kategori: "Pastry", nama: "Cromboloni", harga: 20000, stokAwal: 15, stok: 15 },
+        { id: 9, kategori: "Pastry", nama: "Crotabak", harga: 20000, stokAwal: 15, stok: 15 },
+        { id: 10, kategori: "Pastry", nama: "Crotabeef", harga: 22000, stokAwal: 15, stok: 15 },
+        { id: 11, kategori: "Pastry", nama: "Egg Tart", harga: 15000, stokAwal: 30, stok: 30 },
+        { id: 12, kategori: "Pastry", nama: "Pain au Choco", harga: 14000, stokAwal: 20, stok: 20 },
+        { id: 13, kategori: "Pastry", nama: "Pain au Chocochees", harga: 17000, stokAwal: 20, stok: 20 },
+        { id: 14, kategori: "Pastry", nama: "Smoke n cheese", harga: 22000, stokAwal: 15, stok: 15 },
+        { id: 15, kategori: "Pastry", nama: "Strawberry dulce", harga: 23000, stokAwal: 15, stok: 15 },
+        { id: 16, kategori: "Salt Bread", nama: "Salt Bread ORI", harga: 16000, stokAwal: 25, stok: 25 },
+        { id: 17, kategori: "Salt Bread", nama: "Salt Beef", harga: 23000, stokAwal: 15, stok: 15 },
+        { id: 18, kategori: "Salt Bread", nama: "Salt Cheese", harga: 20000, stokAwal: 20, stok: 20 },
+        { id: 19, kategori: "Salt Bread", nama: "Salt Cho", harga: 20000, stokAwal: 20, stok: 20 },
+        { id: 20, kategori: "Salt Bread", nama: "Salt Choco", harga: 21000, stokAwal: 20, stok: 20 },
+        { id: 21, kategori: "Salt Bread", nama: "Salt Garlic", harga: 20000, stokAwal: 15, stok: 15 },
+        { id: 22, kategori: "Salt Bread", nama: "Salt Smoke", harga: 23000, stokAwal: 15, stok: 15 },
+        { id: 31, kategori: "Salt Bread", nama: "Salt Bread Kunafa", harga: 45000, stokAwal: 10, stok: 10 },
+        { id: 23, kategori: "Bun", nama: "Coffe Bun", harga: 16000, stokAwal: 25, stok: 25 },
+        { id: 24, kategori: "Bun", nama: "Flossbun", harga: 20000, stokAwal: 20, stok: 20 },
+        { id: 25, kategori: "Soft Cookies", nama: "Biscoff", harga: 18000, stokAwal: 20, stok: 20 },
+        { id: 26, kategori: "Soft Cookies", nama: "Choco", harga: 14000, stokAwal: 25, stok: 25 },
+        { id: 27, kategori: "Soft Cookies", nama: "Choco cheese", harga: 16000, stokAwal: 20, stok: 20 },
+        { id: 28, kategori: "Soft Cookies", nama: "Nutella", harga: 19000, stokAwal: 20, stok: 20 },
+        { id: 29, kategori: "Soft Cookies", nama: "Palm Cheese", harga: 16000, stokAwal: 20, stok: 20 },
+        { id: 30, kategori: "Soft Cookies", nama: "Red Velvet Cheese", harga: 14000, stokAwal: 20, stok: 20 },
+        { id: 32, kategori: "Soft Cookies", nama: "Muffin", harga: 8000, stokAwal: 20, stok: 20 }
     ];
 
-    // SISTEM PINTAR: Menggabungkan data tersimpan lama dengan menu baru agar tidak eror/blank
-    let produkData = [];
-    let savedData = localStorage.getItem('madanni_stok');
-    
-    if (savedData) {
-        try {
-            let parsedData = JSON.parse(savedData);
-            // Salin data lama, lalu cek kalau ada item baru di master (seperti Muffin/Kunafa) yang belum terdaftar
-            produkData = masterProduk.map(mItem => {
-                let existingItem = parsedData.find(pItem => pItem.id === mItem.id);
-                return existingItem ? existingItem : mItem;
-            });
-        } catch(e) {
-            produkData = JSON.parse(JSON.stringify(masterProduk));
-        }
-    } else {
-        produkData = JSON.parse(JSON.stringify(masterProduk));
-    }
-
-    let riwayatTransaksi = JSON.parse(localStorage.getItem('madanni_riwayat')) || [];
+    let produkData = JSON.parse(localStorage.getItem('madanni_stok_v2')) || JSON.parse(JSON.stringify(masterProduk));
+    let riwayatTransaksi = JSON.parse(localStorage.getItem('madanni_riwayat_v2')) || [];
     let keranjang = [];
     let currentMode = 'kasir';
 
@@ -264,8 +309,8 @@
     }
 
     function saveData() {
-        localStorage.setItem('madanni_stok', JSON.stringify(produkData));
-        localStorage.setItem('madanni_riwayat', JSON.stringify(riwayatTransaksi));
+        localStorage.setItem('madanni_stok_v2', JSON.stringify(produkData));
+        localStorage.setItem('madanni_riwayat_v2', JSON.stringify(riwayatTransaksi));
     }
 
     function switchMode(mode) {
@@ -277,7 +322,9 @@
 
     function renderMenu() {
         const container = document.getElementById('container-menu');
-        const keyword = document.getElementById('search-input').value.toLowerCase();
+        if (!container) return;
+        
+        const keyword = document.getElementById('search-input') ? document.getElementById('search-input').value.toLowerCase() : "";
         container.innerHTML = "";
 
         const kategoriList = ["Pastry", "Salt Bread", "Bun", "Soft Cookies"];
@@ -306,6 +353,21 @@
                         `;
                     }
 
+                    // TAMPILKAN STOK AWAL & SISA STOK
+                    let terjual = (kue.stokAwal || kue.stok) - kue.stok;
+                    if (terjual < 0) terjual = 0; // Jika stok ditambah manual
+
+                    let isHabis = kue.stok <= 0;
+                    let boxClass = isHabis ? "stok-info-box habis" : "stok-info-box";
+
+                    let labelStok = `
+                        <div class="${boxClass}">
+                            📦 Stok Awal: <b>${kue.stokAwal || kue.stok} pcs</b><br>
+                            🛍️ Terjual: <b>${terjual} pcs</b><br>
+                            👉 <b>Sisa Stok: ${kue.stok} pcs</b>
+                        </div>
+                    `;
+
                     htmlSection += `
                         <div class="menu-card">
                             <div>
@@ -313,7 +375,7 @@
                                 <div class="menu-price">Rp ${kue.harga.toLocaleString('id-ID')}</div>
                             </div>
                             <div>
-                                <span class="menu-stock">Stok: <b>${kue.stok} pcs</b></span>
+                                ${labelStok}
                                 <div class="action-area">${tombolAksi}</div>
                             </div>
                         </div>
@@ -329,7 +391,7 @@
     function tambahKeKeranjang(id) {
         const item = produkData.find(p => p.id === id);
         if (!item || item.stok <= 0) {
-            alert(`Stok ${item ? item.nama : 'Kue'} habis woi!`);
+            alert(`Sisa stok ${item ? item.nama : 'kue'} sudah habis!`);
             return;
         }
 
@@ -338,7 +400,7 @@
             if (itemKeranjang.jumlah < item.stok) {
                 itemKeranjang.jumlah++;
             } else {
-                alert("Gak bisa nambah, melebihi batas stok!");
+                alert("Jumlah pembelian melebihi sisa stok yang ada!");
             }
         } else {
             keranjang.push({ id: item.id, nama: item.nama, harga: item.harga, jumlah: 1 });
@@ -353,6 +415,7 @@
 
     function renderKeranjang() {
         const listContainer = document.getElementById('cart-list');
+        if(!listContainer) return;
         let totalSeluruhnya = 0;
 
         if (keranjang.length === 0) {
@@ -382,12 +445,16 @@
 
     function prosesBayar() {
         if (keranjang.length === 0) {
-            alert("Keranjang masih kosong!");
+            alert("Keranjang belanjaan masih kosong!");
             return;
         }
 
+        const metodeElemen = document.getElementById('metode-bayar');
+        const jenisMetode = metodeElemen ? metodeElemen.value : 'CASH';
+
         let totalBayar = 0;
         let detailKueArray = [];
+        let itemsDibeli = [];
 
         keranjang.forEach(itemKeranjang => {
             const produkAsli = produkData.find(p => p.id === itemKeranjang.id);
@@ -395,55 +462,137 @@
                 produkAsli.stok -= itemKeranjang.jumlah;
             }
             totalBayar += itemKeranjang.harga * itemKeranjang.jumlah;
-            detailKueArray.push(`${itemKeranjang.nama} (${itemKeranjang.jumlah}x)`);
+            detailKueArray.push(itemKeranjang.nama + " (" + itemKeranjang.jumlah + "x)");
+            itemsDibeli.push({ id: itemKeranjang.id, jumlah: itemKeranjang.jumlah });
         });
 
         const waktuSekarang = new Date().toLocaleString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit', day: 'numeric', month: 'short' });
 
         riwayatTransaksi.unshift({
+            id: Date.now(),
             waktu: waktuSekarang,
             detail: detailKueArray.join(', '),
+            items: itemsDibeli,
+            metode: jenisMetode, // CASH atau QRIS
             total: totalBayar
         });
         
-        alert("🎉 Transaksi Berhasil! Data jualan otomatis tercatat!");
+        alert(`🎉 Transaksi Berhasil via ${jenisMetode}!\nSisa stok otomatis berkurang.`);
         
         saveData();
         keranjang = [];
-        document.getElementById('search-input').value = "";
+        if(document.getElementById('search-input')) document.getElementById('search-input').value = "";
         renderKeranjang();
         renderMenu();
         renderRiwayat();
     }
 
+    function hapusTransaksi(transaksiId) {
+        const transaksi = riwayatTransaksi.find(t => t.id === transaksiId);
+        if (!transaksi) return;
+
+        if (confirm(`Yakin mau menghapus transaksi ini?\nSisa stok barang yang dibeli akan dikembalikan otomatis.`)) {
+            if (transaksi.items && Array.isArray(transaksi.items)) {
+                transaksi.items.forEach(item => {
+                    const produk = produkData.find(p => p.id === item.id);
+                    if (produk) {
+                        produk.stok += item.jumlah;
+                    }
+                });
+            }
+
+            riwayatTransaksi = riwayatTransaksi.filter(t => t.id !== transaksiId);
+
+            saveData();
+            renderMenu();
+            renderRiwayat();
+            alert("✅ Transaksi berhasil dihapus!");
+        }
+    }
+
     function renderRiwayat() {
         const historyContainer = document.getElementById('history-list');
+        const cashContainer = document.getElementById('total-cash');
+        const qrisContainer = document.getElementById('total-qris');
         const omzetContainer = document.getElementById('total-omzet');
-        let totalOmzet = 0;
+        
+        if(!historyContainer) return;
+
+        let totalCash = 0;
+        let totalQris = 0;
 
         if (riwayatTransaksi.length === 0) {
-            historyContainer.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #9a3412;">Belum ada data penjualan masuk hari ini.</td></tr>`;
-            omzetContainer.innerText = "Rp 0";
+            historyContainer.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #9a3412;">Belum ada data penjualan.</td></tr>';
+            if(cashContainer) cashContainer.innerText = "Rp 0";
+            if(qrisContainer) qrisContainer.innerText = "Rp 0";
+            if(omzetContainer) omzetContainer.innerText = "Rp 0";
             return;
         }
 
         historyContainer.innerHTML = "";
         riwayatTransaksi.forEach((transaksi, index) => {
-            totalOmzet += transaksi.total;
+            if (transaksi.metode === 'QRIS') {
+                totalQris += transaksi.total;
+            } else {
+                totalCash += transaksi.total;
+            }
+
+            let badgeClass = (transaksi.metode === 'QRIS') ? 'badge-qris' : 'badge-cash';
+            let labelMetode = (transaksi.metode === 'QRIS') ? '📱 QRIS' : '💵 CASH';
+            
             historyContainer.innerHTML += `
                 <tr>
                     <td>${index + 1}</td>
                     <td><b>${transaksi.waktu}</b></td>
                     <td style="color:#9a3412; font-weight:600;">${transaksi.detail}</td>
+                    <td><span class="badge-metode ${badgeClass}">${labelMetode}</span></td>
                     <td style="font-weight:700; color:#16a34a;">Rp ${transaksi.total.toLocaleString('id-ID')}</td>
+                    <td style="text-align: center;">
+                        <button class="btn-delete-transaksi" onclick="hapusTransaksi(${transaksi.id})">❌ Hapus</button>
+                    </td>
                 </tr>
             `;
         });
 
-        omzetContainer.innerText = "Rp " + totalOmzet.toLocaleString('id-ID');
+        let totalOmzet = totalCash + totalQris;
+
+        if(cashContainer) cashContainer.innerText = "Rp " + totalCash.toLocaleString('id-ID');
+        if(qrisContainer) qrisContainer.innerText = "Rp " + totalQris.toLocaleString('id-ID');
+        if(omzetContainer) omzetContainer.innerText = "Rp " + totalOmzet.toLocaleString('id-ID');
     }
 
     function ubahStokBebas(id, aksi) {
         const produk = produkData.find(p => p.id === id);
-        const inputElement = document.getElementById(`qty-${id}`);
-        const nilaiInput
+        const inputElement = document.getElementById('qty-' + id);
+        const nilaiInput = inputElement ? (parseInt(inputElement.value) || 1) : 1;
+
+        if (produk) {
+            if (aksi === 'tambah') {
+                produk.stok += nilaiInput;
+                produk.stokAwal = (produk.stokAwal || 0) + nilaiInput; // Tambah stok awal juga jika nambah stok baru
+            } else if (aksi === 'kurang') {
+                produk.stok -= nilaiInput;
+                if (produk.stok < 0) produk.stok = 0;
+            }
+            saveData();
+            renderMenu();
+        }
+    }
+
+    function resetSemuaData() {
+        if (confirm("Kamu yakin mau mereset semua sisa stok ke awal dan menghapus seluruh riwayat penjualan?")) {
+            localStorage.clear();
+            produkData = JSON.parse(JSON.stringify(masterProduk));
+            riwayatTransaksi = [];
+            initApp();
+        }
+    }
+
+    window.onload = initApp;
+</script>
+
+</body>
+</html>
+        .
+
+       
