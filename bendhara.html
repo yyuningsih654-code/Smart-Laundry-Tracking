@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Madanni Cookies - Kasir Bebas Input</title>
+    <title>Madanni Cookies - Kasir Terupdate</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
 
@@ -220,6 +220,7 @@
         { id: 20, kategori: "Salt Bread", nama: "Salt Choco", harga: 21000, stok: 20 },
         { id: 21, kategori: "Salt Bread", nama: "Salt Garlic", harga: 20000, stok: 15 },
         { id: 22, kategori: "Salt Bread", nama: "Salt Smoke", harga: 23000, stok: 15 },
+        { id: 31, kategori: "Salt Bread", nama: "Salt Bread Kunafa", harga: 45000, stok: 10 }, // BARU
         { id: 23, kategori: "Bun", nama: "Coffe Bun", harga: 16000, stok: 25 },
         { id: 24, kategori: "Bun", nama: "Flossbun", harga: 20000, stok: 20 },
         { id: 25, kategori: "Soft Cookies", nama: "Biscoff", harga: 18000, stok: 20 },
@@ -227,13 +228,24 @@
         { id: 27, kategori: "Soft Cookies", nama: "Choco cheese", harga: 16000, stok: 20 },
         { id: 28, kategori: "Soft Cookies", nama: "Nutella", harga: 19000, stok: 20 },
         { id: 29, kategori: "Soft Cookies", nama: "Palm Cheese", harga: 16000, stok: 20 },
-        { id: 30, kategori: "Soft Cookies", nama: "Red Velvet Cheese", harga: 14000, stok: 20 }
+        { id: 30, kategori: "Soft Cookies", nama: "Red Velvet Cheese", harga: 14000, stok: 20 },
+        { id: 32, kategori: "Soft Cookies", nama: "Muffin", harga: 8000, stok: 20 } // BARU
     ];
 
     let produkData = JSON.parse(localStorage.getItem('madanni_stok')) || masterProduk;
     let riwayatTransaksi = JSON.parse(localStorage.getItem('madanni_riwayat')) || [];
     let keranjang = [];
     let currentMode = 'kasir';
+
+    // Cek jika ada produk baru yang belum masuk ke penyimpanan lama browser
+    if(produkData.length < masterProduk.length) {
+        masterProduk.forEach(mp => {
+            if(!produkData.some(pd => pd.id === mp.id)) {
+                produkData.push(mp);
+            }
+        });
+        localStorage.setItem('madanni_stok', JSON.stringify(produkData));
+    }
 
     function initApp() {
         saveData();
@@ -276,7 +288,6 @@
                     if (currentMode === 'kasir') {
                         tombolAksi = `<button class="btn-add btn-sm" onclick="tambahKeKeranjang(${kue.id})">🛒 Tambah</button>`;
                     } else {
-                        // FITUR BARU: Input Angka Bebas di Sini!
                         tombolAksi = `
                             <div class="stock-input-group">
                                 <input type="number" id="qty-${kue.id}" class="input-qty" value="1" min="1">
@@ -423,7 +434,6 @@
         omzetContainer.innerText = "Rp " + totalOmzet.toLocaleString('id-ID');
     }
 
-    // FUNGSI BARU: Ambil nilai angka bebas dari input user
     function ubahStokBebas(id, aksi) {
         const produk = produkData.find(p => p.id === id);
         const inputElement = document.getElementById(`qty-${id}`);
@@ -442,17 +452,4 @@
     }
 
     function resetSemuaData() {
-        if (confirm("Kamu yakin mau hapus SEMUA RIWAYAT TRANSAKSI dan kembalikan semua stok ke awal?")) {
-            localStorage.removeItem('madanni_stok');
-            localStorage.removeItem('madanni_riwayat');
-            produkData = JSON.parse(JSON.stringify(masterProduk));
-            riwayatTransaksi = [];
-            initApp();
-        }
-    }
-
-    window.onload = initApp;
-</script>
-
-</body>
-    </html>               
+  
