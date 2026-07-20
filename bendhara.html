@@ -197,6 +197,7 @@
 </div>
 
 <script>
+    // DATA MASTER TERUPDATE (Sudah Termasuk Muffin & Kunafa)
     const masterProduk = [
         { id: 1, kategori: "Pastry", nama: "Butter Croissant", harga: 12000, stok: 20 },
         { id: 2, kategori: "Pastry", nama: "Chezzy Roll", harga: 16000, stok: 20 },
@@ -220,7 +221,7 @@
         { id: 20, kategori: "Salt Bread", nama: "Salt Choco", harga: 21000, stok: 20 },
         { id: 21, kategori: "Salt Bread", nama: "Salt Garlic", harga: 20000, stok: 15 },
         { id: 22, kategori: "Salt Bread", nama: "Salt Smoke", harga: 23000, stok: 15 },
-        { id: 31, kategori: "Salt Bread", nama: "Salt Bread Kunafa", harga: 45000, stok: 10 }, // BARU
+        { id: 31, kategori: "Salt Bread", nama: "Salt Bread Kunafa", harga: 45000, stok: 10 },
         { id: 23, kategori: "Bun", nama: "Coffe Bun", harga: 16000, stok: 25 },
         { id: 24, kategori: "Bun", nama: "Flossbun", harga: 20000, stok: 20 },
         { id: 25, kategori: "Soft Cookies", nama: "Biscoff", harga: 18000, stok: 20 },
@@ -229,23 +230,31 @@
         { id: 28, kategori: "Soft Cookies", nama: "Nutella", harga: 19000, stok: 20 },
         { id: 29, kategori: "Soft Cookies", nama: "Palm Cheese", harga: 16000, stok: 20 },
         { id: 30, kategori: "Soft Cookies", nama: "Red Velvet Cheese", harga: 14000, stok: 20 },
-        { id: 32, kategori: "Soft Cookies", nama: "Muffin", harga: 8000, stok: 20 } // BARU
+        { id: 32, kategori: "Soft Cookies", nama: "Muffin", harga: 8000, stok: 20 }
     ];
 
-    let produkData = JSON.parse(localStorage.getItem('madanni_stok')) || masterProduk;
+    // SISTEM PINTAR: Menggabungkan data tersimpan lama dengan menu baru agar tidak eror/blank
+    let produkData = [];
+    let savedData = localStorage.getItem('madanni_stok');
+    
+    if (savedData) {
+        try {
+            let parsedData = JSON.parse(savedData);
+            // Salin data lama, lalu cek kalau ada item baru di master (seperti Muffin/Kunafa) yang belum terdaftar
+            produkData = masterProduk.map(mItem => {
+                let existingItem = parsedData.find(pItem => pItem.id === mItem.id);
+                return existingItem ? existingItem : mItem;
+            });
+        } catch(e) {
+            produkData = JSON.parse(JSON.stringify(masterProduk));
+        }
+    } else {
+        produkData = JSON.parse(JSON.stringify(masterProduk));
+    }
+
     let riwayatTransaksi = JSON.parse(localStorage.getItem('madanni_riwayat')) || [];
     let keranjang = [];
     let currentMode = 'kasir';
-
-    // Cek jika ada produk baru yang belum masuk ke penyimpanan lama browser
-    if(produkData.length < masterProduk.length) {
-        masterProduk.forEach(mp => {
-            if(!produkData.some(pd => pd.id === mp.id)) {
-                produkData.push(mp);
-            }
-        });
-        localStorage.setItem('madanni_stok', JSON.stringify(produkData));
-    }
 
     function initApp() {
         saveData();
@@ -319,8 +328,8 @@
 
     function tambahKeKeranjang(id) {
         const item = produkData.find(p => p.id === id);
-        if (item.stok <= 0) {
-            alert(`Stok ${item.nama} habis woi!`);
+        if (!item || item.stok <= 0) {
+            alert(`Stok ${item ? item.nama : 'Kue'} habis woi!`);
             return;
         }
 
@@ -437,19 +446,4 @@
     function ubahStokBebas(id, aksi) {
         const produk = produkData.find(p => p.id === id);
         const inputElement = document.getElementById(`qty-${id}`);
-        const nilaiInput = parseInt(inputElement.value) || 1;
-
-        if (produk) {
-            if (aksi === 'tambah') {
-                produk.stok += nilaiInput;
-            } else if (aksi === 'kurang') {
-                produk.stok -= nilaiInput;
-                if (produk.stok < 0) produk.stok = 0;
-            }
-            saveData();
-            renderMenu();
-        }
-    }
-
-    function resetSemuaData() {
-  
+        const nilaiInput
