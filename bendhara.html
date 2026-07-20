@@ -18,6 +18,7 @@
             font-family: 'Fredoka', sans-serif;
             background: linear-gradient(135deg, #fef08a 0%, #fefcbf 100%);
             margin: 0; padding: 15px; color: var(--main-color);
+            background-attachment: fixed;
         }
 
         .app-container {
@@ -38,7 +39,16 @@
         h1 { margin: 0; font-size: 26px; text-transform: uppercase; }
         .subtitle { margin: 5px 0 0 0; font-size: 14px; color: var(--accent-color); font-weight: 600; }
 
-        .tab-btn-group { display: flex; gap: 10px; margin: 15px 0; justify-content: center; }
+        /* Fitur Cari & Tab Bar */
+        .control-panel {
+            display: flex; flex-direction: column; gap: 10px; margin-top: 15px; align-items: center;
+        }
+        .search-box {
+            width: 100%; max-width: 400px; padding: 10px 15px; font-family: 'Fredoka';
+            font-size: 15px; border: 3px solid var(--main-color); border-radius: 12px;
+            outline: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .tab-btn-group { display: flex; gap: 10px; justify-content: center; }
         .tab-btn {
             background: #fef3c7; border: 3px solid var(--main-color); padding: 8px 16px;
             border-radius: 12px; font-family: 'Fredoka'; font-weight: 600; cursor: pointer;
@@ -50,12 +60,13 @@
             padding: 20px; box-shadow: 0 8px 0 var(--main-color);
         }
 
+        .category-block { margin-bottom: 25px; }
         .category-title {
             background: var(--main-color); color: white; display: inline-block;
             padding: 5px 15px; border-radius: 10px; font-size: 14px; margin-bottom: 15px;
         }
 
-        .grid-menu { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .grid-menu { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
         
         .menu-card {
             background: var(--card-bg); border: 2px solid var(--main-color);
@@ -75,7 +86,7 @@
         .btn-stock-in { background: #bae6fd; }
         .btn-stock-out { background: #fecdd3; }
 
-        /* Sisi Kanan: Keranjang & Ringkasan */
+        /* Sisi Kanan: Keranjang */
         .sidebar { display: flex; flex-direction: column; gap: 20px; }
         
         .cart-box {
@@ -84,7 +95,6 @@
         }
 
         .cart-title { font-size: 18px; border-bottom: 3px dashed var(--main-color); padding-bottom: 8px; margin-top: 0; }
-        
         .cart-item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 8px 0; border-bottom: 1px solid #fef3c7; font-size: 13px;
@@ -101,6 +111,11 @@
             cursor: pointer; margin-top: 15px; box-shadow: 0 4px 0 var(--main-color);
         }
         .btn-checkout:active { transform: translateY(4px); box-shadow: none; }
+        
+        .btn-reset {
+            background: #ffcbd1; border: 2px solid #78350f; font-family: 'Fredoka';
+            font-size: 11px; padding: 4px 8px; border-radius: 8px; cursor: pointer; margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -110,18 +125,23 @@
         <h1>🍪 MADANNI COOKIES HUB</h1>
         <p class="subtitle">Kasir Digital & Sistem Monitor Stok Otomatis</p>
         
-        <div class="tab-btn-group">
-            <button class="tab-btn active" onclick="switchMode('kasir')">🛒 Mode Kasir Jualan</button>
-            <button class="tab-btn" onclick="switchMode('stok')">📦 Mode Kelola Stok Gudang</button>
+        <div class="control-panel">
+            <!-- FITUR CARI MENU -->
+            <input type="text" id="search-input" class="search-box" placeholder="🔍 Cari nama kue di sini..." oninput="renderMenu()">
+            
+            <div class="tab-btn-group">
+                <button class="tab-btn active" id="btn-mode-kasir" onclick="switchMode('kasir')">🛒 Mode Kasir Jualan</button>
+                <button class="tab-btn" id="btn-mode-stok" onclick="switchMode('stok')">📦 Mode Kelola Stok Gudang</button>
+            </div>
         </div>
     </header>
 
-    <!-- AREA UTAMA: DAFTAR MENU -->
+    <!-- AREA UTAMA -->
     <main class="menu-section">
         <div id="container-menu"></div>
     </main>
 
-    <!-- AREA SAMPING: STRIP STRUK KERANJANG -->
+    <!-- AREA KERANJANG -->
     <aside class="sidebar">
         <div class="cart-box">
             <h3 class="cart-title">🛒 Keranjang Belanja</h3>
@@ -132,14 +152,15 @@
                 <span id="cart-grand-total">Rp 0</span>
             </div>
             <button class="btn-checkout" onclick="prosesBayar()">BAYAR & POTONG STOK ⚡</button>
+            
+            <center><button class="btn-reset" onclick="resetStokAwal()">⚠️ Reset Stok ke Awal</button></center>
         </div>
     </aside>
 </div>
 
 <script>
-    // Data Menu diambil persis dari Gambar Menu yang kamu kirim
-    let produkData = [
-        // PASTRY
+    // Data Default Master Menu
+    const masterProduk = [
         { id: 1, kategori: "Pastry", nama: "Butter Croissant", harga: 12000, stok: 20 },
         { id: 2, kategori: "Pastry", nama: "Chezzy Roll", harga: 16000, stok: 20 },
         { id: 3, kategori: "Pastry", nama: "Cinnamon Nutela", harga: 19000, stok: 20 },
@@ -155,8 +176,6 @@
         { id: 13, kategori: "Pastry", nama: "Pain au Chocochees", harga: 17000, stok: 20 },
         { id: 14, kategori: "Pastry", nama: "Smoke n cheese", harga: 22000, stok: 15 },
         { id: 15, kategori: "Pastry", nama: "Strawberry dulce", harga: 23000, stok: 15 },
-        
-        // SALT BREAD
         { id: 16, kategori: "Salt Bread", nama: "Salt Bread ORI", harga: 16000, stok: 25 },
         { id: 17, kategori: "Salt Bread", nama: "Salt Beef", harga: 23000, stok: 15 },
         { id: 18, kategori: "Salt Bread", nama: "Salt Cheese", harga: 20000, stok: 20 },
@@ -164,12 +183,8 @@
         { id: 20, kategori: "Salt Bread", nama: "Salt Choco", harga: 21000, stok: 20 },
         { id: 21, kategori: "Salt Bread", nama: "Salt Garlic", harga: 20000, stok: 15 },
         { id: 22, kategori: "Salt Bread", nama: "Salt Smoke", harga: 23000, stok: 15 },
-        
-        // BUN
         { id: 23, kategori: "Bun", nama: "Coffe Bun", harga: 16000, stok: 25 },
         { id: 24, kategori: "Bun", nama: "Flossbun", harga: 20000, stok: 20 },
-        
-        // SOFT COOKIES
         { id: 25, kategori: "Soft Cookies", nama: "Biscoff", harga: 18000, stok: 20 },
         { id: 26, kategori: "Soft Cookies", nama: "Choco", harga: 14000, stok: 25 },
         { id: 27, kategori: "Soft Cookies", nama: "Choco cheese", harga: 16000, stok: 20 },
@@ -178,72 +193,85 @@
         { id: 30, kategori: "Soft Cookies", nama: "Red Velvet Cheese", harga: 14000, stok: 20 }
     ];
 
+    // Mengambil data dari memori browser lokal (biar ga hilang pas direfresh)
+    let produkData = JSON.parse(localStorage.getItem('madanni_stok')) || masterProduk;
     let keranjang = [];
-    let currentMode = 'kasir'; // kasir atau stok
+    let currentMode = 'kasir';
 
     function initApp() {
+        saveToLocalStorage();
         renderMenu();
         renderKeranjang();
     }
 
+    function saveToLocalStorage() {
+        localStorage.setItem('madanni_stok', JSON.stringify(produkData));
+    }
+
     function switchMode(mode) {
         currentMode = mode;
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        event.target.classList.add('active');
+        document.getElementById('btn-mode-kasir').classList.toggle('active', mode === 'kasir');
+        document.getElementById('btn-mode-stok').classList.toggle('active', mode === 'stok');
         renderMenu();
     }
 
-    // Mengelompokkan & merender menu berdasarkan kategori di foto brosur
     function renderMenu() {
         const container = document.getElementById('container-menu');
+        const keyword = document.getElementById('search-input').value.toLowerCase();
         container.innerHTML = "";
 
         const kategoriList = ["Pastry", "Salt Bread", "Bun", "Soft Cookies"];
 
         kategoriList.forEach(kat => {
-            const listKue = produkData.filter(p => p.kategori === kat);
+            // Filter kue berdasarkan Kategori DAN Kata Kunci Pencarian
+            const listKue = produkData.filter(p => p.kategori === kat && p.nama.toLowerCase().includes(keyword));
             
-            let htmlSection = `
-                <div class="category-title">⭐ Kategori: ${kat}</div>
-                <div class="grid-menu">
-            `;
-
-            listKue.forEach(kue => {
-                let tombolAksi = '';
-                
-                if (currentMode === 'kasir') {
-                    tombolAksi = `<button class="btn-sm btn-add" onclick="tambahKeKeranjang(${kue.id})">🛒 Tambah</button>`;
-                } else {
-                    tombolAksi = `
-                        <button class="btn-sm btn-stock-in" onclick="ubahStokManual(${kue.id}, 5)">➕ Masuk 5</button>
-                        <button class="btn-sm btn-stock-out" onclick="ubahStokManual(${kue.id}, -5)">➖ Buang 5</button>
-                    `;
-                }
-
-                htmlSection += `
-                    <div class="menu-card">
-                        <div>
-                            <div class="menu-name">${kue.nama}</div>
-                            <div class="menu-price">Rp ${kue.harga.toLocaleString('id-ID')}</div>
-                        </div>
-                        <div>
-                            <span class="menu-stock">Stok: <b>${kue.stok} pcs</b></span>
-                            <div class="action-area">${tombolAksi}</div>
-                        </div>
-                    </div>
+            if (listKue.length > 0) {
+                let htmlSection = `
+                    <div class="category-block">
+                        <div class="category-title">⭐ ${kat}</div>
+                        <div class="grid-menu">
                 `;
-            });
 
-            htmlSection += `</div>`;
-            container.innerHTML += htmlSection;
+                listKue.forEach(kue => {
+                    let tombolAksi = '';
+                    if (currentMode === 'kasir') {
+                        tombolAksi = `<button class="btn-sm btn-add" onclick="tambahKeKeranjang(${kue.id})">🛒 Tambah</button>`;
+                    } else {
+                        tombolAksi = `
+                            <button class="btn-sm btn-stock-in" onclick="ubahStokManual(${kue.id}, 5)">➕ Masuk 5</button>
+                            <button class="btn-sm btn-stock-out" onclick="ubahStokManual(${kue.id}, -5)">➖ Buang 5</button>
+                        `;
+                    }
+
+                    htmlSection += `
+                        <div class="menu-card">
+                            <div>
+                                <div class="menu-name">${kue.nama}</div>
+                                <div class="menu-price">Rp ${kue.harga.toLocaleString('id-ID')}</div>
+                            </div>
+                            <div>
+                                <span class="menu-stock">Stok: <b>${kue.stok} pcs</b></span>
+                                <div class="action-area">${tombolAksi}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                htmlSection += `</div></div>`;
+                container.innerHTML += htmlSection;
+            }
         });
+
+        if (container.innerHTML === "") {
+            container.innerHTML = `<p style="text-align:center; color:#9a3412;">Kue "${document.getElementById('search-input').value}" ga ketemu woi, coba cek tulisannya! 🔎</p>`;
+        }
     }
 
     function tambahKeKeranjang(id) {
         const item = produkData.find(p => p.id === id);
-        
         if (item.stok <= 0) {
-            alert(`Waduh, stok ${item.nama} habis woi! Tambah stok dulu di mode gudang.`);
+            alert(`Stok ${item.nama} habis woi! Tambah stok dulu di mode gudang.`);
             return;
         }
 
@@ -252,7 +280,7 @@
             if (itemKeranjang.jumlah < item.stok) {
                 itemKeranjang.jumlah++;
             } else {
-                alert("Nggak bisa nambah lagi, kapasitas melebihi stok toko!");
+                alert("Nggak bisa nambah lagi, kuota melebihi stok toko!");
             }
         } else {
             keranjang.push({ id: item.id, nama: item.nama, harga: item.harga, jumlah: 1 });
@@ -299,11 +327,10 @@
 
     function prosesBayar() {
         if (keranjang.length === 0) {
-            alert("Keranjang masih kosong, apa yang mau dibayar? 🤔");
+            alert("Keranjang masih kosong woi! Mampir dulu masukin kue 😭");
             return;
         }
 
-        // Proses memotong stok utama di database lokal web
         keranjang.forEach(itemKeranjang => {
             const produkAsli = produkData.find(p => p.id === itemKeranjang.id);
             if (produkAsli) {
@@ -311,23 +338,33 @@
             }
         });
 
-        alert("🎉 Transaksi Berhasil! Nota disimpan & stok kue otomatis terpotong!");
-        keranjang = []; // kosongkan keranjang
+        alert("🎉 Transaksi Berhasil! Total belanjaan sudah dicatat dan stok toko otomatis terkunci aman!");
+        
+        saveToLocalStorage(); // Mengunci data stok terbaru ke browser
+        keranjang = [];
+        document.getElementById('search-input').value = ""; // Reset kolom pencarian
         renderKeranjang();
         renderMenu();
     }
 
-    // Fungsi mode stok masuk dan keluar gudang
     function ubahStokManual(id, jumlah) {
         const produk = produkData.find(p => p.id === id);
         if (produk) {
             produk.stok += jumlah;
             if (produk.stok < 0) produk.stok = 0;
+            saveToLocalStorage();
             renderMenu();
         }
     }
 
-    // Jalankan pertama kali saat load
+    function resetStokAwal() {
+        if (confirm("Kamu yakin mau reset semua jumlah stok kue ke setelan awal pabrik?")) {
+            localStorage.removeItem('madanni_stok');
+            produkData = JSON.parse(JSON.stringify(masterProduk));
+            initApp();
+        }
+    }
+
     window.onload = initApp;
 </script>
 
