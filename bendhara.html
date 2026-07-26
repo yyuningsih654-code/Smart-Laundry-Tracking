@@ -287,7 +287,7 @@
         { id: 21, kategori: "Salt Bread", nama: "Salt Garlic", harga: 20000, stokAwal: 12, terjual: 0 },
         { id: 22, kategori: "Salt Bread", nama: "Salt Smoke", harga: 23000, stokAwal: 10, terjual: 0 },
         { id: 31, kategori: "Salt Bread", nama: "Salt Bread Kunafa", harga: 45000, stokAwal: 8, terjual: 0 },
-        { id: 23, kategori: "Bun", nama: "Coffe Bun", harga: 15000, stokAwal: 25, terjual: 0 }, // Updated dari 16.000 ke 15.000
+        { id: 23, kategori: "Bun", nama: "Coffe Bun", harga: 15000, stokAwal: 25, terjual: 0 },
         { id: 24, kategori: "Bun", nama: "Flossbun", harga: 20000, stokAwal: 15, terjual: 0 },
         { id: 25, kategori: "Soft Cookies", nama: "Biscoff", harga: 18000, stokAwal: 20, terjual: 0 },
         { id: 26, kategori: "Soft Cookies", nama: "Choco", harga: 14000, stokAwal: 20, terjual: 0 },
@@ -296,12 +296,13 @@
         { id: 29, kategori: "Soft Cookies", nama: "Palm Cheese", harga: 16000, stokAwal: 12, terjual: 0 },
         { id: 30, kategori: "Soft Cookies", nama: "Red Velvet Cheese", harga: 14000, stokAwal: 15, terjual: 0 },
         { id: 32, kategori: "Soft Cookies", nama: "Muffin", harga: 8000, stokAwal: 18, terjual: 0 },
-        { id: 33, kategori: "Soft Cookies", nama: "Fudgy Brownies Biasa", harga: 50000, stokAwal: 10, terjual: 0 }, // Tambahan Menu Baru
-        { id: 34, kategori: "Soft Cookies", nama: "Fudgy Brownies Kunafa", harga: 57000, stokAwal: 10, terjual: 0 }  // Tambahan Menu Baru
+        { id: 33, kategori: "Soft Cookies", nama: "Fudgy Brownies Biasa", harga: 50000, stokAwal: 10, terjual: 0 },
+        { id: 34, kategori: "Soft Cookies", nama: "Fudgy Brownies Kunafa", harga: 57000, stokAwal: 10, terjual: 0 },
+        { id: 35, kategori: "Soft Cookies", nama: "Brownies Tiramisu", harga: 53000, stokAwal: 10, terjual: 0 } // Menu Baru Tambahan!
     ];
 
-    let produkData = JSON.parse(localStorage.getItem('madanni_stok_v4')) || JSON.parse(JSON.stringify(masterProduk));
-    let riwayatTransaksi = JSON.parse(localStorage.getItem('madanni_riwayat_v4')) || [];
+    let produkData = JSON.parse(localStorage.getItem('madanni_stok_v5')) || JSON.parse(JSON.stringify(masterProduk));
+    let riwayatTransaksi = JSON.parse(localStorage.getItem('madanni_riwayat_v5')) || [];
     let keranjang = [];
     let currentMode = 'kasir';
 
@@ -313,8 +314,8 @@
     }
 
     function saveData() {
-        localStorage.setItem('madanni_stok_v4', JSON.stringify(produkData));
-        localStorage.setItem('madanni_riwayat_v4', JSON.stringify(riwayatTransaksi));
+        localStorage.setItem('madanni_stok_v5', JSON.stringify(produkData));
+        localStorage.setItem('madanni_riwayat_v5', JSON.stringify(riwayatTransaksi));
     }
 
     function switchMode(mode) {
